@@ -42822,6 +42822,7 @@ MonoBehaviour:
   BottomClamp: -20
   CameraAngleOverride: 0
   LockCameraPosition: 0
+  LookSensitivity: 2.5
 --- !u!114 &2012324132
 MonoBehaviour:
   m_ObjectHideFlags: 0
