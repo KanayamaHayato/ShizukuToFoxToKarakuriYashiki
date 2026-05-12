@@ -11,6 +11,14 @@ public class MazeGenerator : MonoBehaviour
     [SerializeField] private Transform root;
     private float cellScale = 5f;
 
+    [SerializeField] private GoalManager goalManager;
+
+
+    void Start()
+    {
+        GenerateMaze();
+    }
+
     public void ClearMaze()
     {
         List<GameObject> tempList = new List<GameObject>();
@@ -56,6 +64,8 @@ public class MazeGenerator : MonoBehaviour
                 cell.Setup(maze[x, y]);
             }
         }
+
+        goalManager.CreateGoalAtDeadEnd(maze, width, height, cellScale, root);
     }
 
     private void GenerateMaze(int x, int y)
