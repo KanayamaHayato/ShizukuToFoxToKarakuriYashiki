@@ -21570,59 +21570,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1071570043}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &1081729252
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1081729253}
-  - component: {fileID: 1081729254}
-  m_Layer: 0
-  m_Name: LanternSpawner
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1081729253
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1081729252}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 17.07045, y: -21.775845, z: 39.899746}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1081729254
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1081729252}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb79166b27c160941bb89e3c7687dd13, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lanternPrefab: {fileID: 5195989682669430510, guid: 222d3f119cab14e4b8ecfcebd7fa90db, type: 3}
-  floor: {fileID: 1662668720}
-  lanternCount: 5
-  gridSize: 3
-  wallCheckRadius: 1
-  wallLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  lanternY: 0.15
 --- !u!1 &1082863294
 GameObject:
   m_ObjectHideFlags: 0
@@ -44773,3 +44720,64 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2145076145}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &504013604392827001
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 504013603317586076, guid: 5d60a16f8739a0f498862fc4bd0c2818, type: 3}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 504013603317586076, guid: 5d60a16f8739a0f498862fc4bd0c2818, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 17.07045
+      objectReference: {fileID: 0}
+    - target: {fileID: 504013603317586076, guid: 5d60a16f8739a0f498862fc4bd0c2818, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -21.775845
+      objectReference: {fileID: 0}
+    - target: {fileID: 504013603317586076, guid: 5d60a16f8739a0f498862fc4bd0c2818, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 39.899746
+      objectReference: {fileID: 0}
+    - target: {fileID: 504013603317586076, guid: 5d60a16f8739a0f498862fc4bd0c2818, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 504013603317586076, guid: 5d60a16f8739a0f498862fc4bd0c2818, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 504013603317586076, guid: 5d60a16f8739a0f498862fc4bd0c2818, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 504013603317586076, guid: 5d60a16f8739a0f498862fc4bd0c2818, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 504013603317586076, guid: 5d60a16f8739a0f498862fc4bd0c2818, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 504013603317586076, guid: 5d60a16f8739a0f498862fc4bd0c2818, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 504013603317586076, guid: 5d60a16f8739a0f498862fc4bd0c2818, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 504013603317586077, guid: 5d60a16f8739a0f498862fc4bd0c2818, type: 3}
+      propertyPath: m_Name
+      value: LanternSpawner
+      objectReference: {fileID: 0}
+    - target: {fileID: 504013603317586079, guid: 5d60a16f8739a0f498862fc4bd0c2818, type: 3}
+      propertyPath: floor
+      value: 
+      objectReference: {fileID: 1662668720}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 5d60a16f8739a0f498862fc4bd0c2818, type: 3}
