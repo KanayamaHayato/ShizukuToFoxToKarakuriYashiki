@@ -35529,6 +35529,38 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1709130074}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1710859714 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6727625162871799614, guid: 9cc7344f3fdd7ac4dbab3b171955f8d9, type: 3}
+  m_PrefabInstance: {fileID: 1502774688}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1710859716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1710859714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b7773f9b6bcf7d479182954ae269607, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  virtualCamera: {fileID: 1710859717}
+  zoomSpeed: 2
+  minDistance: 1
+  maxDistance: 2.5
+--- !u!114 &1710859717 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6727625162871799609, guid: 9cc7344f3fdd7ac4dbab3b171955f8d9, type: 3}
+  m_PrefabInstance: {fileID: 1502774688}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1710859714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45e653bab7fb20e499bda25e1b646fea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1712223781
 GameObject:
   m_ObjectHideFlags: 0
