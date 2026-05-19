@@ -5,20 +5,26 @@ public class MazeGenerator : MonoBehaviour
 {
     public int width, height;
     private System.Random random = new System.Random();
-    private MazeCellModel[,] maze;
 
-    public GameObject mazeCellPrefab;
     [SerializeField] private Transform root;
-    private float cellScale = 5f;
-
-    [SerializeField] private GoalManager goalManager;
 
     public int floors = 3;
     public float floorHeight = 10f;
 
     private MazeCellModel[,,] mazes;
+    //í«â¡
+    private GameObject[,,] roomObjects;
 
     [SerializeField] private GameObject floorPrefab;
+    //ñ¿òHÇïîâÆÇ≤Ç∆Ç…äÆëSÉâÉìÉ_ÉÄÇ…Ç∑ÇÈÇÃÇ…ê›íË
+    [SerializeField] private GameObject[] roomPrefabs;
+    [SerializeField] private GameObject corridorPrefab;
+
+    [SerializeField] private float roomSpacing = 20f;
+    [SerializeField] private float corridorWidth = 4f;
+    //äKíi
+    [SerializeField] private GameObject stairRoomPrefabA;
+    [SerializeField] private GameObject stairRoomPrefabB;
 
     void Start()
     {
@@ -34,7 +40,7 @@ public class MazeGenerator : MonoBehaviour
         }
         for (int i = 0; i < tempList.Count; i++)
         {
-            DestroyImmediate(tempList[i]);
+            SafeDestroy(tempList[i]);
         }
     }
 
@@ -43,30 +49,15 @@ public class MazeGenerator : MonoBehaviour
         ClearMaze();
 
         mazes = new MazeCellModel[floors, width, height];
+        roomObjects = new GameObject[floors, width, height];
+
+        int stairX = random.Next(width);
+        int stairY = random.Next(height);
 
         for (int f = 0; f < floors; f++)
         {
             float floorY = f * floorHeight;
             float mazeY = floorY + 0.05f;
-
-            // è∞ê∂ê¨
-            GameObject floor = Instantiate(
-                floorPrefab,
-                new Vector3(
-                    (width - 1) * cellScale / 2f,
-                    floorY,
-                    (height - 1) * cellScale / 2f
-                ),
-                Quaternion.identity,
-                root
-            );
-
-            floor.name = $"Floor_{f + 1}";
-            floor.transform.localScale = new Vector3(
-                width * cellScale,
-                0.05f,
-                height * cellScale
-            );
 
             for (int x = 0; x < width; x++)
             {
@@ -78,29 +69,89 @@ public class MazeGenerator : MonoBehaviour
 
             GenerateMaze(f, 0, 0);
 
+            // ïîâÆÇëSïîêÊÇ…ê∂ê¨
             for (int x = 0; x < width; x++)
             {
                 for (int y = 0; y < height; y++)
                 {
-                    float posX = x * cellScale;
+                    float posX = x * roomSpacing;
                     float posY = mazeY;
-                    float posZ = y * cellScale;
+                    float posZ = y * roomSpacing;
 
-                    MazeCell cell = Instantiate(
-                        mazeCellPrefab,
+                    GameObject roomPrefab;
+
+                    if (x == stairX && y == stairY)
+                    {
+                        if (f == 0)
+                        {
+                            roomPrefab = stairRoomPrefabA;
+                        }
+                        else if (f == 1)
+                        {
+                            roomPrefab = stairRoomPrefabB;
+                        }
+                        else
+                        {
+                            roomPrefab = roomPrefabs[random.Next(roomPrefabs.Length)];
+                        }
+                    }
+                    else
+                    {
+                        roomPrefab = roomPrefabs[random.Next(roomPrefabs.Length)];
+                    }
+
+                    GameObject room = Instantiate(
+                        roomPrefab,
                         new Vector3(posX, posY, posZ),
                         Quaternion.identity,
                         root
-                    ).GetComponent<MazeCell>();
+                    );
 
-                    cell.transform.localScale = new Vector3(cellScale, 2f, cellScale);
-                    cell.name = $"Maze_F{f + 1}_{x}-{y}";
-                    cell.Setup(mazes[f, x, y]);
+                    room.name = $"Room_F{f + 1}_{x}-{y}";
+                    roomObjects[f, x, y] = room;
+                }
+            }
+            
+            // DoorìØémÇí òHÇ≈ê⁄ë±
+
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    MazeCellModel cell = mazes[f, x, y];
+
+                    GameObject currentRoom = roomObjects[f, x, y];
+
+                    if (!cell.HasWall(MazeCellModel.Wall.Top) && y + 1 < height)
+                    {
+                        GameObject nextRoom = roomObjects[f, x, y + 1];
+
+                        CreateCorridorBetweenDoors(
+                            currentRoom.transform.Find("DoorTop"),
+                            nextRoom.transform.Find("DoorBottom"),
+                            $"Corridor_F{f + 1}_{x}-{y}_Top"
+                        );
+                        SafeDestroy(currentRoom.transform.Find("DoorTop").gameObject);
+                        SafeDestroy(nextRoom.transform.Find("DoorBottom").gameObject);
+                    }
+
+                    if (!cell.HasWall(MazeCellModel.Wall.Right) && x + 1 < width)
+                    {
+                        GameObject nextRoom = roomObjects[f, x + 1, y];
+
+                        CreateCorridorBetweenDoors(
+                            currentRoom.transform.Find("DoorRight"),
+                            nextRoom.transform.Find("DoorLeft"),
+                            $"Corridor_F{f + 1}_{x}-{y}_Right"
+                        );
+                        SafeDestroy(currentRoom.transform.Find("DoorRight").gameObject);
+                        SafeDestroy(nextRoom.transform.Find("DoorLeft").gameObject);
+                    }
                 }
             }
         }
 
-        //goalManager.CreateGoalAtDeadEnd(maze, width, height, cellScale, root);
+        //goalManager.CreateGoalAtDeadEnd(maze, width, height, roomSpacing, root);
     }
 
     private void GenerateMaze(int floor, int x, int y)
@@ -144,5 +195,61 @@ public class MazeGenerator : MonoBehaviour
             directions[randomIndex] = temp;
         }
         return directions;
+    }
+
+    private void CreateCorridorBetweenDoors(Transform fromDoor, Transform toDoor, string corridorName)
+    {
+        if (fromDoor == null || toDoor == null)
+        {
+            Debug.LogWarning($"DoorÇ™å©Ç¬Ç©ÇËÇ‹ÇπÇÒ: {corridorName}");
+            return;
+        }
+
+        Vector3 from = fromDoor.position;
+        Vector3 to = toDoor.position;
+
+        Vector3 center = (from + to) / 2;
+        Vector3 direction = to - from;
+
+        center.y -= 1f;
+        GameObject corridor = Instantiate(
+            corridorPrefab,
+            center,
+            Quaternion.identity,
+            root
+        );
+
+        corridor.name = corridorName;
+
+        if (Mathf.Abs(direction.x) > Mathf.Abs(direction.z))
+        {
+            corridor.transform.localScale = new Vector3(
+                Mathf.Abs(direction.x),
+                1f,
+                corridorWidth
+            );
+        }
+        else
+        {
+            corridor.transform.localScale = new Vector3(
+                corridorWidth,
+                1f,
+                Mathf.Abs(direction.z)
+            );
+        }
+    }
+
+    private void SafeDestroy(GameObject obj)
+    {
+        if (obj == null) return;
+
+        if (Application.isPlaying)
+        {
+            Destroy(obj);
+        }
+        else
+        {
+            DestroyImmediate(obj);
+        }
     }
 }
