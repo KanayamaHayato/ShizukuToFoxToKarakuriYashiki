@@ -20,6 +20,8 @@ public class MazeGenerator : MonoBehaviour
 
     [SerializeField] private GameObject floorPrefab;
 
+    private Vector2Int[] holePositions;
+
     void Start()
     {
         GenerateMaze();
@@ -44,29 +46,16 @@ public class MazeGenerator : MonoBehaviour
 
         mazes = new MazeCellModel[floors, width, height];
 
+        holePositions = new Vector2Int[floors];
+
         for (int f = 0; f < floors; f++)
         {
             float floorY = f * floorHeight;
             float mazeY = floorY + 0.05f;
 
-            // °¶¬
-            GameObject floor = Instantiate(
-                floorPrefab,
-                new Vector3(
-                    (width - 1) * cellScale / 2f,
-                    floorY,
-                    (height - 1) * cellScale / 2f
-                ),
-                Quaternion.identity,
-                root
-            );
+            
 
-            floor.name = $"Floor_{f + 1}";
-            floor.transform.localScale = new Vector3(
-                width * cellScale,
-                0.05f,
-                height * cellScale
-            );
+            
 
             for (int x = 0; x < width; x++)
             {
@@ -77,6 +66,46 @@ public class MazeGenerator : MonoBehaviour
             }
 
             GenerateMaze(f, 0, 0);
+
+            Vector2Int holePos = new Vector2Int(-1, -1);
+
+            if (f == 1 || f == 2)
+            {
+                MazeCellModel[,] floorMaze = GetFloorMaze(f);
+                holePos = goalManager.GetRandomDeadEnd(floorMaze, width, height);
+            }
+
+            holePositions[f] = holePos;
+
+            // ƒZƒ‹‚²‚Æ‚É°¶¬
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    if (holePos.x == x && holePos.y == y)
+                    {
+                        continue; // ‚±‚±‚¾‚¯°‚ðì‚ç‚È‚¢ = ŒŠ
+                    }
+
+                    GameObject floor = Instantiate(
+                        floorPrefab,
+                        new Vector3(
+                            x * cellScale,
+                            floorY,
+                            y * cellScale
+                        ),
+                        Quaternion.identity,
+                        root
+                    );
+
+                    floor.name = $"Floor_F{f + 1}_{x}-{y}";
+                    floor.transform.localScale = new Vector3(
+                        cellScale,
+                        0.05f,
+                        cellScale
+                    );
+                }
+            }
 
             for (int x = 0; x < width; x++)
             {
@@ -100,7 +129,22 @@ public class MazeGenerator : MonoBehaviour
             }
         }
 
-        //goalManager.CreateGoalAtDeadEnd(maze, width, height, cellScale, root);
+        for (int f = 1; f < floors; f++)
+        {
+            Vector2Int hole = holePositions[f];
+
+            if (hole.x == -1) continue;
+
+            float posX = hole.x * cellScale;
+            float posZ = hole.y * cellScale;
+
+            float posY = (f - 1) * floorHeight + 1f;
+
+            goalManager.CreateGoal(
+                new Vector3(posX, posY, posZ),
+                root
+            );
+        }
     }
 
     private void GenerateMaze(int floor, int x, int y)
@@ -126,6 +170,21 @@ public class MazeGenerator : MonoBehaviour
                 }
             }
         }
+    }
+
+    private MazeCellModel[,] GetFloorMaze(int floor)
+    {
+        MazeCellModel[,] floorMaze = new MazeCellModel[width, height];
+
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                floorMaze[x, y] = mazes[floor, x, y];
+            }
+        }
+
+        return floorMaze;
     }
 
     private List<(int, int, MazeCellModel.Wall, MazeCellModel.Wall)> ShuffleDirections()
