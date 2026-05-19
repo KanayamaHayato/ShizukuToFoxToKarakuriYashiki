@@ -13,6 +13,12 @@ public class MazeGenerator : MonoBehaviour
 
     [SerializeField] private GoalManager goalManager;
 
+    public int floors = 3;
+    public float floorHeight = 10f;
+
+    private MazeCellModel[,,] mazes;
+
+    [SerializeField] private GameObject floorPrefab;
 
     void Start()
     {
@@ -36,56 +42,87 @@ public class MazeGenerator : MonoBehaviour
     {
         ClearMaze();
 
-        maze = new MazeCellModel[width, height];
-        for (int x = 0; x < width; x++)
+        mazes = new MazeCellModel[floors, width, height];
+
+        for (int f = 0; f < floors; f++)
         {
-            for (int y = 0; y < height; y++)
+            float floorY = f * floorHeight;
+            float mazeY = floorY + 0.05f;
+
+            // °¶¬
+            GameObject floor = Instantiate(
+                floorPrefab,
+                new Vector3(
+                    (width - 1) * cellScale / 2f,
+                    floorY,
+                    (height - 1) * cellScale / 2f
+                ),
+                Quaternion.identity,
+                root
+            );
+
+            floor.name = $"Floor_{f + 1}";
+            floor.transform.localScale = new Vector3(
+                width * cellScale,
+                0.05f,
+                height * cellScale
+            );
+
+            for (int x = 0; x < width; x++)
             {
-                maze[x, y] = new MazeCellModel();
+                for (int y = 0; y < height; y++)
+                {
+                    mazes[f, x, y] = new MazeCellModel();
+                }
+            }
+
+            GenerateMaze(f, 0, 0);
+
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    float posX = x * cellScale;
+                    float posY = mazeY;
+                    float posZ = y * cellScale;
+
+                    MazeCell cell = Instantiate(
+                        mazeCellPrefab,
+                        new Vector3(posX, posY, posZ),
+                        Quaternion.identity,
+                        root
+                    ).GetComponent<MazeCell>();
+
+                    cell.transform.localScale = new Vector3(cellScale, 2f, cellScale);
+                    cell.name = $"Maze_F{f + 1}_{x}-{y}";
+                    cell.Setup(mazes[f, x, y]);
+                }
             }
         }
-        GenerateMaze(0, 0);
 
-        for (int x = 0; x < width; x++)
-        {
-            for (int y = 0; y < height; y++)
-            {
-                float posX = x * cellScale;
-                float posZ = y * cellScale;
-
-                MazeCell cell = Instantiate(
-                    mazeCellPrefab,
-                    new Vector3(posX, 0f, posZ),
-                    Quaternion.identity,
-                    root).GetComponent<MazeCell>();
-
-                cell.transform.localScale *= cellScale;
-                cell.name = $"{x}-{y}";
-                cell.Setup(maze[x, y]);
-            }
-        }
-
-        goalManager.CreateGoalAtDeadEnd(maze, width, height, cellScale, root);
+        //goalManager.CreateGoalAtDeadEnd(maze, width, height, cellScale, root);
     }
 
-    private void GenerateMaze(int x, int y)
+    private void GenerateMaze(int floor, int x, int y)
     {
-        MazeCellModel currentCell = maze[x, y];
+        MazeCellModel currentCell = mazes[floor, x, y];
         currentCell.visited = true;
 
         foreach (var direction in ShuffleDirections())
         {
             int newX = x + direction.Item1;
             int newY = y + direction.Item2;
+
             if (newX >= 0 && newY >= 0 && newX < width && newY < height)
             {
-                MazeCellModel neighbourCell = maze[newX, newY];
+                MazeCellModel neighbourCell = mazes[floor, newX, newY];
+
                 if (!neighbourCell.visited)
                 {
                     neighbourCell.visited = true;
                     currentCell.RemoveWall(direction.Item3);
                     neighbourCell.RemoveWall(direction.Item4);
-                    GenerateMaze(newX, newY);
+                    GenerateMaze(floor, newX, newY);
                 }
             }
         }
