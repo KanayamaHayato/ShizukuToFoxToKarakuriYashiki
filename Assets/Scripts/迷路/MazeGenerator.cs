@@ -26,10 +26,7 @@ public class MazeGenerator : MonoBehaviour
     [SerializeField] private GameObject stairRoomPrefabA;
     [SerializeField] private GameObject stairRoomPrefabB;
 
-    void Start()
-    {
-        GenerateMaze();
-    }
+    
 
     public void ClearMaze()
     {
