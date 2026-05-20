@@ -101,6 +101,9 @@ namespace StarterAssets
         private int _animIDFreeFall;
         private int _animIDMotionSpeed;
 
+        private PlayerDamage playerDamage;
+        private float moveTimer;
+
 #if ENABLE_INPUT_SYSTEM 
         private PlayerInput _playerInput;
 #endif
@@ -153,6 +156,8 @@ namespace StarterAssets
             // reset our timeouts on start
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
+
+            playerDamage = GetComponent<PlayerDamage>();
         }
 
         private void Update()
@@ -280,6 +285,23 @@ namespace StarterAssets
                 _animator.SetFloat(_animIDSpeed, _animationBlend);
                 _animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
             }
+
+            //HPテストのため歩くとダメージを減るとなっている．
+            //今後消してほしい
+            if (_input.move != Vector2.zero)
+            {
+                moveTimer += Time.deltaTime;
+
+                if (moveTimer >= 1f)
+                {
+                    playerDamage.WalkDamage();
+                    moveTimer = 0f;
+                }
+            }
+            else
+            {
+                moveTimer = 0f;
+            }
         }
 
         private void JumpAndGravity()
@@ -313,6 +335,9 @@ namespace StarterAssets
                     {
                         _animator.SetBool(_animIDJump, true);
                     }
+
+                    //HPテストのため
+                    playerDamage.JumpHeal();
 
                     _input.jump = false;
                     _jumpTimeoutDelta = JumpTimeout;
