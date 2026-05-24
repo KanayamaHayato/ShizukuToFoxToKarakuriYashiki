@@ -1,44 +1,41 @@
+// LanternInteract.cs
+using System;
 using UnityEngine;
-using TMPro;
 
 public class LanternInteract : MonoBehaviour
 {
-    public LanternManager lanternManager;
+    [SerializeField] private Renderer lanternRenderer;
+    [SerializeField] private GameObject interactUI;
 
-    public Renderer lanternRenderer;
-
-    // UIテキスト
-    public GameObject interactUI;
+    // LanternManager が購読するイベント（直接参照をなくす）
+    public event Action OnLit;
 
     private bool playerNear = false;
     private bool alreadyTouched = false;
 
     void Start()
     {
-        interactUI.SetActive(false);
+        if (interactUI != null)
+            interactUI.SetActive(false);
     }
 
     void Update()
     {
-        if (playerNear && !alreadyTouched)
-        {
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                TouchLantern();
-            }
-        }
+        if (playerNear && !alreadyTouched && Input.GetKeyDown(KeyCode.E))
+            TouchLantern();
     }
 
-    void TouchLantern()
+    private void TouchLantern()
     {
         alreadyTouched = true;
 
-        lanternManager.AddLantern();
+        if (lanternRenderer != null)
+            lanternRenderer.material.color = Color.yellow;
 
-        lanternRenderer.material.color = Color.yellow;
+        if (interactUI != null)
+            interactUI.SetActive(false);
 
-        interactUI.SetActive(false);
-
+        OnLit?.Invoke();
         Debug.Log("灯籠に触れた");
     }
 
@@ -47,11 +44,8 @@ public class LanternInteract : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerNear = true;
-
-            if (!alreadyTouched)
-            {
+            if (!alreadyTouched && interactUI != null)
                 interactUI.SetActive(true);
-            }
         }
     }
 
@@ -60,8 +54,8 @@ public class LanternInteract : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerNear = false;
-
-            interactUI.SetActive(false);
+            if (interactUI != null)
+                interactUI.SetActive(false);
         }
     }
 }

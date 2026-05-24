@@ -48,9 +48,32 @@ MonoBehaviour:
   height: 10
   root: {fileID: 3256978220634029646}
   floors: 3
-  floorHeight: 4.03
+  floorHeight: 6.01
   floorPrefab: {fileID: 8775935811469091405, guid: 09f5e562d8f0e114e99f7fe7e5bb91e8, type: 3}
-  roomPrefabs: []
-  corridorPrefab: {fileID: 0}
+  roomDataList:
+  - {fileID: 11400000, guid: 334d9973543bac64dbf830eb4e4a6af0, type: 2}
+  - {fileID: 11400000, guid: 10df76d117955e849a4fd95cb8eb385a, type: 2}
+  - {fileID: 11400000, guid: 21d192b66723f8145808bad14dba5c0d, type: 2}
+  - {fileID: 11400000, guid: f9ac4d057dc5a494fb0e130660b4784e, type: 2}
+  - {fileID: 11400000, guid: 53f109dc8761d0845b5417e6655e68bf, type: 2}
+  - {fileID: 11400000, guid: 376c9b870b51e2247b1b7a3998c0e442, type: 2}
+  - {fileID: 11400000, guid: 3fff39008cabc6a448a8a3b12bb5ed28, type: 2}
+  - {fileID: 11400000, guid: 1c83c633eee00004bac1db1e28803e9a, type: 2}
+  - {fileID: 11400000, guid: 71dfa656ab954fe44b5d393e64bf55dc, type: 2}
+  - {fileID: 11400000, guid: cf5e1f12e3eb6c040956ca4746a0fa63, type: 2}
+  - {fileID: 11400000, guid: 5cc7bc8000780f143b3170b701b9adb3, type: 2}
+  - {fileID: 11400000, guid: b2bbacad5b363054d9a66d811eee56f0, type: 2}
+  corridorPrefab: {fileID: 8775935811469091405, guid: 09f5e562d8f0e114e99f7fe7e5bb91e8, type: 3}
+  corridorWallPrefab: {fileID: 8775935811469091405, guid: 09f5e562d8f0e114e99f7fe7e5bb91e8, type: 3}
+  corridorCeilingPrefab: {fileID: 8775935811469091405, guid: 09f5e562d8f0e114e99f7fe7e5bb91e8, type: 3}
+  corridorWallHeight: 3
   roomSpacing: 20
   corridorWidth: 4
+  stairRoomPrefabUp: {fileID: 7603481479898513971, guid: b5a56b03fe0bb9541ad17e9d34e00aac, type: 3}
+  stairRoomPrefabDown: {fileID: 7603481479898513971, guid: ac47afa9fb74ffd47b8460446d91261b, type: 3}
+  startRoomPrefab: {fileID: 5402442317475585563, guid: faca980409d5ca5479df203f992f772e, type: 3}
+  stairsPerFloor: 5
+  lanternManager: {fileID: 8887651167376400286, guid: 02faf20b8a2262b47afac5bcdc372975, type: 3}
+  playerSpawner: {fileID: 74061195512099241, guid: faca980409d5ca5479df203f992f772e, type: 3}
+  useFixedSeed: 0
+  seed: 0
