@@ -1,9 +1,12 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Cinemachine;
 
 public class GameOverManager : MonoBehaviour
 {
     public GameObject gameOverPanel;
+    public GameObject player;
+    public CinemachineBrain cinemachineBrain;
 
     void Start()
     {
@@ -17,6 +20,9 @@ public class GameOverManager : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+
+        player.GetComponent<StarterAssets.ThirdPersonController>().enabled = false;
+        cinemachineBrain.enabled = false;
     }
 
     public void Retry()
