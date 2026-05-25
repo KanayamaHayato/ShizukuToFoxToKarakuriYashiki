@@ -286,22 +286,6 @@ namespace StarterAssets
                 _animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
             }
 
-            //HPテストのため歩くとダメージを減るとなっている．
-            //今後消してほしい
-            if (_input.move != Vector2.zero)
-            {
-                moveTimer += Time.deltaTime;
-
-                if (moveTimer >= 1f)
-                {
-                    playerDamage.WalkDamage();
-                    moveTimer = 0f;
-                }
-            }
-            else
-            {
-                moveTimer = 0f;
-            }
         }
 
         private void JumpAndGravity()
