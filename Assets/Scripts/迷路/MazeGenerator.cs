@@ -14,9 +14,14 @@ public class MazeGenerator : MonoBehaviour
     private MazeCellModel[,,] mazes;
     private GameObject[,,] roomObjects;
 
+    private List<Vector2Int>[] lanternPositions; // フロアごとの灯籠座標
+
     [SerializeField] private GameObject floorPrefab;
     [SerializeField] private RoomData[] roomDataList;
     [SerializeField] private GameObject corridorPrefab;
+
+    [SerializeField] private GameObject[] lanternRoomPrefabs; // 灯籠部屋プレハブ一覧
+    [SerializeField] [Range(0, 20)] private int lanternRoomCount = 3; // 灯籠部屋の個数
 
     // ★追加: 通路の壁と天井
     [SerializeField] private GameObject corridorWallPrefab;
@@ -98,6 +103,60 @@ public class MazeGenerator : MonoBehaviour
                 }
             }
         }
+
+        // ★ 灯籠部屋の位置を決める（全フロア合計でlanternRoomCount個）
+        lanternPositions = new List<Vector2Int>[floors];
+        for (int f = 0; f < floors; f++)
+            lanternPositions[f] = new List<Vector2Int>();
+
+        int totalPlaced = 0;
+        int totalTries = 0;
+
+        while (totalPlaced < lanternRoomCount && totalTries < 10000)
+        {
+            totalTries++;
+
+            int f = random.Next(floors);
+            var candidate = new Vector2Int(random.Next(width), random.Next(height));
+
+            // スタート部屋は除外
+            if (f == 0 && candidate == Vector2Int.zero) continue;
+
+            // 階段部屋と被らないか確認
+            bool stairConflict = false;
+            for (int sf = 0; sf < floors; sf++)
+            {
+                if (stairPositions[sf].Contains(candidate))
+                {
+                    stairConflict = true;
+                    break;
+                }
+            }
+            if (stairConflict) continue;
+
+            // 同じフロアで隣接していないか確認（上下左右）
+            bool tooClose = false;
+            foreach (var placedPos in lanternPositions[f])
+            {
+                int dx = Mathf.Abs(candidate.x - placedPos.x);
+                int dy = Mathf.Abs(candidate.y - placedPos.y);
+                if (dx + dy <= 1)
+                {
+                    tooClose = true;
+                    break;
+                }
+            }
+            if (tooClose) continue;
+
+            // 同じフロアに既に置いてないか確認
+            if (lanternPositions[f].Contains(candidate)) continue;
+
+            lanternPositions[f].Add(candidate);
+            totalPlaced++;
+        }
+
+        if (totalPlaced < lanternRoomCount)
+            Debug.LogWarning($"[MazeGenerator] 灯籠部屋を {totalPlaced}/{lanternRoomCount} 個しか置けませんでした。迷路が小さすぎる可能性があります。");
 
         for (int f = 0; f < floors; f++)
         {
@@ -184,6 +243,9 @@ public class MazeGenerator : MonoBehaviour
             sb.AppendLine($"  {kv.Key} : {kv.Value}個");
 
         Debug.Log(sb.ToString());
+        // GenerateMaze() のフロアループが全部終わった後に追加
+        StaticBatchingUtility.Combine(root.gameObject);
+        Debug.Log("[MazeGenerator] Static Batching 適用完了");
     }
 
     // ★ 部屋プレハブ選択
@@ -202,6 +264,11 @@ public class MazeGenerator : MonoBehaviour
         // 一つ下のフロアの同位置が上り階段なら、下り階段を置く
         if (f > 0 && stairPositions[f - 1].Contains(pos))
             return stairRoomPrefabDown;
+
+        // ★ 灯籠部屋判定
+        if (lanternRoomPrefabs != null && lanternRoomPrefabs.Length > 0
+            && lanternPositions[f].Contains(pos))
+            return lanternRoomPrefabs[random.Next(lanternRoomPrefabs.Length)];
 
         return PickWeightedRoom();
     }

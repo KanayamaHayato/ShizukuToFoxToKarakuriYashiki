@@ -60,6 +60,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lanternRenderer: {fileID: 8119887666226234096}
   interactUI: {fileID: 6295751854250548550}
+  litIntensity: 2
+  fadeTime: 1.5
 --- !u!1 &5195989682669430510
 GameObject:
   m_ObjectHideFlags: 0
@@ -394,6 +396,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 75b4690455a4a7645a859ab45ace7859, type: 3}
+      propertyPath: m_Materials.Array.data[4]
+      value: 
+      objectReference: {fileID: 2100000, guid: 04322ab408b0d5345818530c75bdefe9, type: 2}
     - target: {fileID: 919132149155446097, guid: 75b4690455a4a7645a859ab45ace7859, type: 3}
       propertyPath: m_Name
       value: "\u706F\u7C60\u672C\u4F53"
