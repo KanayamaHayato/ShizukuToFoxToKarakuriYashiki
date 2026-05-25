@@ -37,7 +37,8 @@
 
 > ※ 開発中
 
-ここにゲーム画面の画像を貼る予定
+畳の部屋！
+<img width="1044" height="474" alt="image" src="https://github.com/user-attachments/assets/e76b85e1-2080-47a1-a037-d5fc94b08dbb" />
 
 ---
 
