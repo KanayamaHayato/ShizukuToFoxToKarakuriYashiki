@@ -5,7 +5,7 @@ public class PlayerDamage : MonoBehaviour
     public HeartSystem heartSystem;
     public GameOverManager gameOverManager;
 
-    public void WalkDamage()
+    private void Damage()
     {
         if (heartSystem.life <= 0) return;
 
@@ -14,6 +14,22 @@ public class PlayerDamage : MonoBehaviour
         if (heartSystem.life <= 0)
         {
             gameOverManager.ShowGameOver();
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("EnemyAttack"))
+        {
+            Damage();
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            Damage();
         }
     }
 
