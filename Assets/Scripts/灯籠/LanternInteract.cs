@@ -5,34 +5,46 @@ using UnityEngine;
 public class LanternInteract : MonoBehaviour
 {
     [SerializeField] private Renderer lanternRenderer;
-    [SerializeField] private GameObject interactUI;
 
     [Header("光演出")]
-    [SerializeField] private float litIntensity = 2.0f;   // 最終的な光の強さ
-    [SerializeField] private float fadeTime = 1.5f;   // ふわっと光るまでの秒数
+    [SerializeField] private float litIntensity = 2.0f;
+    [SerializeField] private float fadeTime = 1.5f;
 
     public event Action OnLit;
 
     private bool playerNear = false;
     private bool alreadyTouched = false;
 
-    // 光部分マテリアルのインデックス
     private const int LightMaterialIndex = 4;
+    private Material lightMaterial;
 
-    private Material lightMaterial; // インスタンスマテリアル
+    // ★ LanternManagerから直接渡してもらう
+    private LanternManager lanternManager;
+
+    public void SetLanternManager(LanternManager lm)
+    {
+        lanternManager = lm;
+    }
 
     void Start()
     {
-        if (interactUI != null)
-            interactUI.SetActive(false);
+        if (lanternRenderer == null)
+        {
+            Debug.LogError($"[LanternInteract] lanternRenderer が未設定です: {gameObject.name}");
+            return;
+        }
 
-        // マテリアルをインスタンス化（他の灯籠に影響しないように）
-        lightMaterial = lanternRenderer.materials[LightMaterialIndex];
-        lightMaterial.EnableKeyword("_EMISSION");
-        lightMaterial.SetColor("_EmissionColor", Color.black); // 最初は消灯
-
-        // インスタンスマテリアルをRendererに反映
         var mats = lanternRenderer.materials;
+
+        if (mats.Length <= LightMaterialIndex)
+        {
+            Debug.LogError($"[LanternInteract] マテリアル数が足りません: {mats.Length}");
+            return;
+        }
+
+        lightMaterial = mats[LightMaterialIndex];
+        lightMaterial.EnableKeyword("_EMISSION");
+        lightMaterial.SetColor("_EmissionColor", Color.black);
         mats[LightMaterialIndex] = lightMaterial;
         lanternRenderer.materials = mats;
     }
@@ -46,11 +58,9 @@ public class LanternInteract : MonoBehaviour
     private void TouchLantern()
     {
         alreadyTouched = true;
-
-        if (interactUI != null)
-            interactUI.SetActive(false);
-
+        InteractUIManager.Instance.Hide();
         StartCoroutine(LightUpCoroutine());
+        Debug.Log($"[LanternInteract] OnLit購読数: {OnLit?.GetInvocationList().Length}");
         OnLit?.Invoke();
         Debug.Log("灯籠に触れた");
     }
@@ -58,23 +68,17 @@ public class LanternInteract : MonoBehaviour
     private IEnumerator LightUpCoroutine()
     {
         float elapsed = 0f;
-
-        // 光部分の元の色を取得
         Color baseColor = lightMaterial.GetColor("_Color");
 
         while (elapsed < fadeTime)
         {
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / fadeTime);
-
-            // Emissionをだんだん強くする
             Color emissionColor = baseColor * Mathf.Pow(t * litIntensity, 2f);
             lightMaterial.SetColor("_EmissionColor", emissionColor);
-
             yield return null;
         }
 
-        // 最終値で固定
         Color finalColor = baseColor * litIntensity;
         lightMaterial.SetColor("_EmissionColor", finalColor);
     }
@@ -84,8 +88,8 @@ public class LanternInteract : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerNear = true;
-            if (!alreadyTouched && interactUI != null)
-                interactUI.SetActive(true);
+            if (!alreadyTouched)
+                InteractUIManager.Instance.Show();
         }
     }
 
@@ -94,8 +98,7 @@ public class LanternInteract : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerNear = false;
-            if (interactUI != null)
-                interactUI.SetActive(false);
+            InteractUIManager.Instance.Hide();
         }
     }
 }

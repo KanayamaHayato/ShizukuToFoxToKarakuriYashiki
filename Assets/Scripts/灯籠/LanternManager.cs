@@ -1,34 +1,33 @@
-// LanternManager.cs
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class LanternManager : MonoBehaviour
 {
-    // 全灯籠が灯ったときのイベント（ゲームクリア処理などを外から購読）
     public event Action OnAllLit;
-    // 1個灯るたびのイベント（UI更新に使う）
-    public event Action<int, int> OnLitCountChanged; // (現在数, 総数)
+    public event Action<int, int> OnLitCountChanged;
 
     public int TotalCount { get; private set; }
     public int LitCount { get; private set; }
 
-    // 迷路再生成時にリセット
     public void Reset()
     {
         TotalCount = 0;
         LitCount = 0;
     }
 
-    // MazeGenerator から部屋生成時に呼ぶ
     public void RegisterLanternRoom(GameObject room)
     {
-        // 部屋の中にある LanternInteract を全部登録
-        var lanterns = room.GetComponentsInChildren<LanternInteract>();
+        var lanterns = room.GetComponentsInChildren<LanternInteract>(true);
+        Debug.Log($"[LanternManager] {room.name} LanternInteract数: {lanterns.Length}");
+
         TotalCount += lanterns.Length;
 
         foreach (var l in lanterns)
+        {
+            l.SetLanternManager(this); // ★ 直接渡す
             l.OnLit += HandleLit;
+            Debug.Log($"[LanternManager] 登録完了: {l.gameObject.name}");
+        }
     }
 
     private void HandleLit()
@@ -39,7 +38,7 @@ public class LanternManager : MonoBehaviour
 
         if (LitCount >= TotalCount)
         {
-            Debug.Log("すべての灯籠に触れた！");
+            Debug.Log("すべての灯籠に触れた！OnAllLit発火！");
             OnAllLit?.Invoke();
         }
     }
