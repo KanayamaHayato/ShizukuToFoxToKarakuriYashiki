@@ -38,6 +38,8 @@ public class MazeGenerator : MonoBehaviour
     // ★追加: スタート部屋
     [SerializeField] private GameObject startRoomPrefab;
 
+    private Vector2Int startPos;
+
     // ★追加: 階段の個数
     [SerializeField][Range(1, 10)] private int stairsPerFloor = 1;
 
@@ -54,6 +56,11 @@ public class MazeGenerator : MonoBehaviour
     private List<Vector2Int>[] stairPositions;
 
     // ----------------------------------------
+
+    void Start()
+    {
+        GenerateMaze();
+    }
 
     public void ClearMaze()
     {
@@ -77,6 +84,9 @@ public class MazeGenerator : MonoBehaviour
 
         int actualSeed = useFixedSeed ? seed : random.Next();
         Debug.Log($"[MazeGenerator] Seed: {actualSeed}");
+
+        //スタート位置決め
+        startPos = new Vector2Int(random.Next(width), random.Next(height));
 
         mazes = new MazeCellModel[floors, width, height];
         roomObjects = new GameObject[floors, width, height];
@@ -193,7 +203,8 @@ public class MazeGenerator : MonoBehaviour
                     if (!roomCount.ContainsKey(prefabName)) roomCount[prefabName] = 0;
                     roomCount[prefabName]++;
 
-                    if (f == 0 && x == 0 && y == 0)
+                    // スポーンポイント
+                    if (f == 0 && x == startPos.x && y == startPos.y)
                         playerSpawner.Spawn(room);
 
                     ValidateRoomDoors(room, room.name);
@@ -244,15 +255,15 @@ public class MazeGenerator : MonoBehaviour
 
         Debug.Log(sb.ToString());
         // GenerateMaze() のフロアループが全部終わった後に追加
-        StaticBatchingUtility.Combine(root.gameObject);
+        //StaticBatchingUtility.Combine(root.gameObject);
         Debug.Log("[MazeGenerator] Static Batching 適用完了");
     }
 
     // ★ 部屋プレハブ選択
     private GameObject ChooseRoomPrefab(int f, int x, int y)
     {
-        // (0,0) はスタート部屋（1階のみ）
-        if (f == 0 && x == 0 && y == 0)
+        // スタート部屋
+        if (f == 0 && x == startPos.x && y == startPos.y)
             return startRoomPrefab;
 
         var pos = new Vector2Int(x, y);
@@ -438,6 +449,12 @@ public class MazeGenerator : MonoBehaviour
     private void SafeDestroy(Transform t)
     {
         if (t != null) SafeDestroy(t.gameObject);
+    }
+
+    // MazeGenerator.cs に追加
+    public LanternManager GetLanternManager()
+    {
+        return lanternManager;
     }
 
     // MazeGenerator.cs に追加
