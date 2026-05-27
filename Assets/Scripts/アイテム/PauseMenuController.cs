@@ -4,6 +4,7 @@ public class PauseMenuController : MonoBehaviour
 {
     [SerializeField] private GameObject itemMenuCanvas;
     [SerializeField] private MonoBehaviour[] disableWhenOpen;
+    [SerializeField] private ItemMenuController itemMenu;
 
     private bool isOpen = false;
 
@@ -27,12 +28,17 @@ public class PauseMenuController : MonoBehaviour
     void OpenMenu()
     {
         isOpen = true;
+
+        if (itemMenu != null)
+            itemMenu.Refresh();
+
         itemMenuCanvas.SetActive(true);
         Time.timeScale = 0f;
 
         foreach (MonoBehaviour script in disableWhenOpen)
         {
-            if (script != null) script.enabled = false;
+            if (script != null)
+                script.enabled = false;
         }
 
         Cursor.lockState = CursorLockMode.None;
@@ -42,12 +48,14 @@ public class PauseMenuController : MonoBehaviour
     void CloseMenu()
     {
         isOpen = false;
+
         itemMenuCanvas.SetActive(false);
         Time.timeScale = 1f;
 
         foreach (MonoBehaviour script in disableWhenOpen)
         {
-            if (script != null) script.enabled = true;
+            if (script != null)
+                script.enabled = true;
         }
 
         Cursor.lockState = CursorLockMode.Locked;
