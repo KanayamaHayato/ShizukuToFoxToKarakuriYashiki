@@ -162,6 +162,11 @@ namespace StarterAssets
 
         private void Update()
         {
+
+            // ★ カメラが破棄されていたら再取得
+            if (_mainCamera == null)
+                _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
+
             _hasAnimator = TryGetComponent(out _animator);
 
             GroundedCheck();
