@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e6970e8b9a16bd46a34ae8959842a96, type: 3}
   m_Name: "\u7D19\u5207\u308C"
   m_EditorClassIdentifier: 
-  itemName: 
-  description: 
-  icon: {fileID: 0}
+  itemName: "\u7D19\u5207\u308C"
+  description: "\u6614\u306E\u3053\u3068\u304C\u66F8\u3044\u3066\u3044\u308B\u624B\u7D19"
+  icon: {fileID: 21300000, guid: 7c9fec29bc12cf44ea598c686f176d9b, type: 3}
+  dropPrefab: {fileID: 3630748521516650298, guid: ab9d8125dd3000443b9da0e13698adab, type: 3}

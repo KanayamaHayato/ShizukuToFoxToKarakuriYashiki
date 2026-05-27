@@ -10,6 +10,7 @@ public class ItemDetailPanel : MonoBehaviour
     [SerializeField] private TextMeshProUGUI descriptionText;
     [SerializeField] private Inventory inventory;
     [SerializeField] private ItemMenuController menuController;
+    [SerializeField] private DropItemSpawner dropSpawner;
 
     private ItemData currentItem;
 
@@ -53,7 +54,11 @@ public class ItemDetailPanel : MonoBehaviour
 
     public void OnClickDrop()
     {
-        menuController.DropSelected();
+        if (currentItem == null) return;
+
+        dropSpawner.Drop(currentItem);
+        inventory.Remove(currentItem);
+        menuController.Refresh();
         Hide();
     }
 }
