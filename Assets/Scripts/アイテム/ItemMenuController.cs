@@ -7,6 +7,8 @@ public class ItemMenuController : MonoBehaviour
     [SerializeField] private ItemSlot[] slots;
     private int selectedIndex = -1;
 
+    [SerializeField] private ItemDetailPanel detailPanel;
+
     public void SelectSlot(int index)
     {
         if (!slots[index].HasItem()) return;
@@ -16,6 +18,9 @@ public class ItemMenuController : MonoBehaviour
 
         selectedIndex = index;
         slots[selectedIndex].SetSelected(true);
+
+        var item = slots[index].GetItem();
+        detailPanel.Show(item);
     }
 
     void OnEnable()
@@ -29,6 +34,18 @@ public class ItemMenuController : MonoBehaviour
         {
             ItemData item = inventory.GetItem(i);
             slots[i].SetItem(item);
+            slots[i].SetSelected(false);
         }
+
+        selectedIndex = -1;
+        detailPanel.Show(null);
+    }
+
+    public void DropSelected()
+    {
+        if (selectedIndex < 0) return;
+
+        inventory.RemoveAt(selectedIndex);
+        Refresh();
     }
 }
