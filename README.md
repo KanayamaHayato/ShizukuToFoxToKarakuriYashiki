@@ -39,6 +39,9 @@
 
 畳の部屋！
 <img width="1044" height="474" alt="image" src="https://github.com/user-attachments/assets/e76b85e1-2080-47a1-a037-d5fc94b08dbb" />
+kawaii!ฅ•ω•ฅ
+<img width="466" height="388" alt="image" src="https://github.com/user-attachments/assets/548ae027-1868-429c-aa38-51bb1e221e27" />
+
 
 ---
 
