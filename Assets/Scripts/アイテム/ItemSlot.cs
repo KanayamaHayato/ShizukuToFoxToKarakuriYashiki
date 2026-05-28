@@ -52,4 +52,9 @@ public class ItemSlot : MonoBehaviour
             selectedFrame.SetActive(true);
         }
     }
+
+    public ItemData GetItem()
+    {
+        return currentItem;
+    }
 }

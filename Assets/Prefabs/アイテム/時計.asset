@@ -10,10 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6e6970e8b9a16bd46a34ae8959842a96, type: 3}
-  m_Name: "\u304A\u672D"
+  m_Name: "\u6642\u8A08"
   m_EditorClassIdentifier: 
-  itemName: "\u304A\u672D"
-  description: "\u5996\u529B\u306E\u3053\u3082\u3063\u305F\u672D\n\u3053\u308C\u3067\u602A\u7269\u304B\u3089\u306E\u653B\u6483\u3092\u9632\u3050\u3053\u3068\u304C\u3067\u304D\u305D\u3046...\n(\u304A\u672D
-    +1)"
-  icon: {fileID: 21300000, guid: 5ed2a3a70e31c6d4fab5e629a6aab598, type: 3}
+  itemName: "\u82B1\u6642\u9234"
+  description: "\u685C\u306E\u5F62\u306E\u6642\u8A08\n(\u6642\u9593\u304C\u505C\u6B62\u306A\u308B)"
+  icon: {fileID: 21300000, guid: 9b2e615fb35a69343b186a6891338c12, type: 3}
   dropPrefab: {fileID: 0}
