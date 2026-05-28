@@ -35,6 +35,17 @@ public class RitualRoomManager : MonoBehaviour
             whiteoutCanvasGroup.gameObject.SetActive(true);
         }
 
+        // Inspectorで設定する代わりにタグで探す
+        if (ritualRoomObject == null)
+            ritualRoomObject = GameObject.FindWithTag("RitualRoom");
+
+        if (ritualRoomSpawnPoint == null)
+        {
+            var room = GameObject.FindWithTag("RitualRoom");
+            if (room != null)
+                ritualRoomSpawnPoint = room.transform.Find("SpawnPoint");
+        }
+
         MazeGenerator mazeGenerator = FindObjectOfType<MazeGenerator>();
         if (mazeGenerator == null)
         {
@@ -86,13 +97,20 @@ public class RitualRoomManager : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
 
+
         // ★ 儀式の間が完成したらコメントを外す
-        // if (ritualRoomObject != null)
-        //     ritualRoomObject.SetActive(true);
+        if (ritualRoomObject != null)
+            ritualRoomObject.SetActive(true);
 
         GameObject player = GameObject.FindWithTag("Player");
-        // if (player != null && ritualRoomSpawnPoint != null)
-        //     player.transform.position = ritualRoomSpawnPoint.position;
+        if (player != null && ritualRoomSpawnPoint != null)
+        {
+            // ★ CharacterControllerを一時無効化してから移動
+            var cc = player.GetComponent<CharacterController>();
+            cc.enabled = false;
+            player.transform.position = ritualRoomSpawnPoint.position;
+            cc.enabled = true;
+        }
 
         yield return new WaitForSeconds(0.5f);
 
