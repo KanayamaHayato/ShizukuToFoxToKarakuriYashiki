@@ -4,7 +4,7 @@ public class DropItemSpawner : MonoBehaviour
 {
     [SerializeField] private Transform player;
     [SerializeField] private float forwardDistance = 1.2f;
-    [SerializeField] private float heightOffset = 0.5f;
+    [SerializeField] private float heightOffset = 1.0f;
 
     public void Drop(ItemData item)
     {
