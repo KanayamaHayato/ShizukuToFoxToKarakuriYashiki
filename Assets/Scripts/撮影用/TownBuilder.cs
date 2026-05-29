@@ -3,11 +3,14 @@ using UnityEngine;
 
 public class TownBuilder : MonoBehaviour
 {
-    [SerializeField] private GameObject[] housePrefabs; // Spriteを持つプレハブ
-    [SerializeField] private int rowCount = 4;          // 列数（Z方向）
-    [SerializeField] private float rowSpacing = 3f;     // 列間隔（Z方向）
-    [SerializeField] private float streetLength = 100f; // 街の長さ（X方向）
-    [SerializeField] private float randomGap = 1f;      // 家と家の隙間のランダム幅
+    [SerializeField] private Sprite[] smallHouseSprites;  // 小さい家
+    [SerializeField] private Sprite[] largeHouseSprites;  // マンション・豪邸
+
+    //★ Spriteを直接登録
+    [SerializeField] private int rowCount = 4;
+    [SerializeField] private float rowSpacing = 3f;
+    [SerializeField] private float streetLength = 100f;
+    [SerializeField] private float randomGap = 1f;
     [SerializeField] private int seed = 0;
 
     void Start()
@@ -17,8 +20,6 @@ public class TownBuilder : MonoBehaviour
 
     public void BuildTown()
     {
-        Debug.Log($"[TownBuilder] BuildTown開始 prefab数:{housePrefabs.Length}");
-
         var random = new System.Random(seed);
 
         for (int row = 0; row < rowCount; row++)
@@ -26,25 +27,62 @@ public class TownBuilder : MonoBehaviour
             float z = row * rowSpacing;
             float x = 0f;
 
+            // ★ 後ろの列ほど大きい建物を使う
+            bool useLarge = row >= rowCount - 2 && largeHouseSprites.Length > 0;
+            Sprite[] pool = useLarge ? largeHouseSprites : smallHouseSprites;
+
+            // ★ 大きい建物は最後に配置した位置を記録
+            float lastLargeX = -999f;
+
             while (x < streetLength)
             {
-                // ランダムに家を選ぶ
-                int index = random.Next(housePrefabs.Length);
-                GameObject prefab = housePrefabs[index];
+                Sprite sprite;
 
-                // Spriteのサイズを取得
-                SpriteRenderer sr = prefab.GetComponent<SpriteRenderer>();
-                float width = sr != null ? sr.sprite.bounds.size.x : 1f;
+                if (useLarge)
+                {
+                    // ★ 大きい建物は間隔をあける
+                    if (x - lastLargeX < 20f)
+                    {
+                        // 間隔が足りない場合は小さい家で埋める
+                        if (smallHouseSprites.Length > 0)
+                        {
+                            sprite = smallHouseSprites[random.Next(smallHouseSprites.Length)];
+                        }
+                        else
+                        {
+                            x += 10f;
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        sprite = pool[random.Next(pool.Length)];
+                        lastLargeX = x;
+                    }
+                }
+                else
+                {
+                    sprite = pool[random.Next(pool.Length)];
+                }
 
-                // ★追加
-                Debug.Log($"prefab:{prefab.name} sr:{sr != null} width:{width} x:{x}");
+                float width = sprite.bounds.size.x;
+                float height = sprite.bounds.size.y;
 
-                // 配置
+                GameObject obj = new GameObject($"House_{row}_{x}");
+                obj.transform.parent = transform;
+
+                SpriteRenderer sr = obj.AddComponent<SpriteRenderer>();
+                sr.sprite = sprite;
+                sr.sortingOrder = -row; // ★ 後ろの列は手前より後ろに描画
+
                 Vector3 pos = transform.position + new Vector3(x + width / 2f, 0f, z);
-                Instantiate(prefab, pos, Quaternion.identity, transform);
+                obj.transform.position = pos;
+                obj.transform.rotation = Quaternion.identity;
 
-                // 次の家の位置（隙間をランダムに）
-                float gap = (float)random.NextDouble() * randomGap;
+                float gap = useLarge
+                    ? (float)random.NextDouble() * randomGap + 5f  // 大きい建物は隙間広め
+                    : (float)random.NextDouble() * randomGap;
+
                 x += width + gap;
             }
         }
