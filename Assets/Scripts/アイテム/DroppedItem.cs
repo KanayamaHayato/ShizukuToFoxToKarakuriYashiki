@@ -1,9 +1,12 @@
 using UnityEngine;
+using System.Collections;
 
 public class DroppedItem : MonoBehaviour
 {
     public ItemData itemData;
     private Inventory inventory;
+    private bool isShowing = false;
+    private bool isShowingFullMessage = false;
 
     [SerializeField] private float pickupDistance = 2.0f;
     [SerializeField] private InteractPanel interactPanel;
@@ -16,27 +19,26 @@ public class DroppedItem : MonoBehaviour
 
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null)
-        {
             player = playerObj.transform;
-        }
 
         if (interactPanel == null)
-        {
             interactPanel = FindObjectOfType<InteractPanel>(true);
-        }
     }
 
     void Update()
     {
-        if (player == null || inventory == null || itemData == null) return;
+        if (player == null || inventory == null || itemData == null || interactPanel == null) return;
 
         float distance = Vector3.Distance(transform.position, player.position);
 
         if (distance <= pickupDistance)
         {
-            interactPanel.Show("Eキーで拾う");
+            if (!isShowingFullMessage)
+                interactPanel.Show("Eキーで拾う");
 
-            if (Input.GetKeyDown(KeyCode.E))
+            isShowing = true;
+
+            if (!isShowingFullMessage && Input.GetKeyDown(KeyCode.E))
             {
                 bool added = inventory.Add(itemData);
 
@@ -44,17 +46,33 @@ public class DroppedItem : MonoBehaviour
                 {
                     interactPanel.Hide();
                     Destroy(gameObject);
+                    return;
                 }
                 else
                 {
-                    interactPanel.Show("インベントリがいっぱいです");
+                    StartCoroutine(ShowFullMessage());
                 }
             }
         }
         else
         {
-            interactPanel.Hide();
+            if (isShowing)
+            {
+                interactPanel.Hide();
+                isShowing = false;
+            }
         }
+    }
+
+    private IEnumerator ShowFullMessage()
+    {
+        isShowingFullMessage = true;
+
+        interactPanel.Show("持ち物がいっぱいです！");
+
+        yield return new WaitForSeconds(2f);
+
+        isShowingFullMessage = false;
     }
 
     public void Setup(ItemData data)
