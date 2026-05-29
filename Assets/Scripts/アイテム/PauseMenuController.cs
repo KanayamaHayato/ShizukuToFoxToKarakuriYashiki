@@ -5,6 +5,7 @@ public class PauseMenuController : MonoBehaviour
     [SerializeField] private GameObject itemMenuCanvas;
     [SerializeField] private MonoBehaviour[] disableWhenOpen;
     [SerializeField] private ItemMenuController itemMenu;
+    [SerializeField] private GameObject interactCanvas;
 
     private bool isOpen = false;
 
@@ -43,6 +44,9 @@ public class PauseMenuController : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+
+        if (interactCanvas != null)
+            interactCanvas.SetActive(false);
     }
 
     void CloseMenu()
@@ -60,5 +64,8 @@ public class PauseMenuController : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        if (interactCanvas != null)
+            interactCanvas.SetActive(true);
     }
 }

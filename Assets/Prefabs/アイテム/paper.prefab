@@ -128,3 +128,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemData: {fileID: 11400000, guid: 333662565c7cc9743ae4a7f04eb6ce30, type: 2}
+  pickupDistance: 1
+  interactPanel: {fileID: 0}

@@ -860,8 +860,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Press E to Interact
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: d70706ad9eb554e43b97eadaa4bde3f0, type: 2}
+  m_sharedMaterial: {fileID: 4475032281811168975, guid: d70706ad9eb554e43b97eadaa4bde3f0, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -885,7 +885,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24.25
+  m_fontSize: 20.2
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1201,7 +1201,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2079,6 +2079,7 @@ MonoBehaviour:
   - {fileID: 1589779211}
   - {fileID: 890754768}
   itemMenu: {fileID: 17335384}
+  interactCanvas: {fileID: 876860308}
 --- !u!1 &772059308
 GameObject:
   m_ObjectHideFlags: 0
@@ -2868,8 +2869,12 @@ PrefabInstance:
       value: paper
       objectReference: {fileID: 0}
     - target: {fileID: 8083581378743625891, guid: ab9d8125dd3000443b9da0e13698adab, type: 3}
+      propertyPath: interactPanel
+      value: 
+      objectReference: {fileID: 442797964}
+    - target: {fileID: 8083581378743625891, guid: ab9d8125dd3000443b9da0e13698adab, type: 3}
       propertyPath: pickupDistance
-      value: 5
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ab9d8125dd3000443b9da0e13698adab, type: 3}
