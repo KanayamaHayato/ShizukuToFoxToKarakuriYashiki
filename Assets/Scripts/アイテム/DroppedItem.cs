@@ -6,6 +6,8 @@ public class DroppedItem : MonoBehaviour
     private Inventory inventory;
 
     [SerializeField] private float pickupDistance = 2.0f;
+    [SerializeField] private InteractPanel interactPanel;
+
     private Transform player;
 
     void Start()
@@ -16,11 +18,11 @@ public class DroppedItem : MonoBehaviour
         if (playerObj != null)
         {
             player = playerObj.transform;
-            Debug.Log("Player found");
         }
-        else
+
+        if (interactPanel == null)
         {
-            Debug.Log("Player not found");
+            interactPanel = FindObjectOfType<InteractPanel>(true);
         }
     }
 
@@ -32,30 +34,26 @@ public class DroppedItem : MonoBehaviour
 
         if (distance <= pickupDistance)
         {
-            Debug.Log("EƒL[‚ÅE‚¦‚é");
+            interactPanel.Show("EƒL[‚ÅE‚¤");
 
             if (Input.GetKeyDown(KeyCode.E))
             {
-                Debug.Log("E‰Ÿ‚µ‚½");
-
-                if (itemData == null)
-                {
-                    Debug.Log("ItemData ‚ª“ü‚Á‚Ä‚È‚¢");
-                    return;
-                }
-
                 bool added = inventory.Add(itemData);
 
                 if (added)
                 {
-                    Debug.Log(itemData.itemName + " ‚ðE‚Á‚½");
+                    interactPanel.Hide();
                     Destroy(gameObject);
                 }
                 else
                 {
-                    Debug.Log("Inventory ‚ª–ž”t");
+                    interactPanel.Show("ƒCƒ“ƒxƒ“ƒgƒŠ‚ª‚¢‚Á‚Ï‚¢‚Å‚·");
                 }
             }
+        }
+        else
+        {
+            interactPanel.Hide();
         }
     }
 
