@@ -8,11 +8,14 @@ public class DialogueManager : MonoBehaviour
 
     [SerializeField] private DialogueUI dialogueUI;
 
+    [Header("自動再生設定")]
+    [SerializeField] private bool autoPlay = false;      // ★ 自動再生モード
+    [SerializeField] private float autoPlayDelay = 3f;  // ★ 1行あたりの表示時間
+
     private DialogueData currentData;
     private int currentIndex;
     private bool isRunning = false;
 
-    // 会話終了時のコールバック（Timelineから使う）
     public event Action OnDialogueEnd;
 
     void Awake()
@@ -25,7 +28,6 @@ public class DialogueManager : MonoBehaviour
         Instance = this;
     }
 
-    // 外から呼ぶ開始メソッド
     public void StartDialogue(DialogueData data)
     {
         if (isRunning) return;
@@ -36,20 +38,37 @@ public class DialogueManager : MonoBehaviour
 
         dialogueUI.Show();
         ShowCurrentLine();
+
+        // ★ 自動再生モードならコルーチン開始
+        if (autoPlay)
+            StartCoroutine(AutoPlayCoroutine());
     }
 
-    // Eキーまたはクリックで次へ
     void Update()
     {
-        if (!isRunning) return;
+        if (!isRunning || autoPlay) return; // ★ autoPlay中はEキー無効
 
         if (Input.GetKeyDown(KeyCode.E) || Input.GetMouseButtonDown(0))
             Next();
     }
 
+    private IEnumerator AutoPlayCoroutine()
+    {
+        while (isRunning)
+        {
+            // タイプライターが終わるまで待つ
+            yield return new WaitUntil(() => !dialogueUI.IsTyping);
+
+            // 表示時間待つ
+            yield return new WaitForSeconds(autoPlayDelay);
+
+            if (!isRunning) break;
+            Next();
+        }
+    }
+
     private void Next()
     {
-        // タイプライター中なら即全表示
         if (dialogueUI.IsTyping)
         {
             dialogueUI.SkipTyping();
