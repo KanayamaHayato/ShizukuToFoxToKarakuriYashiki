@@ -36,3 +36,6 @@ Desktop.ini
 # Asset Store のキャッシュ
 # -----------------------------------------------
 /[Aa]ssets/AssetStoreTools*
+
+*.hdr
+*.hdrи
