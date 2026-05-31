@@ -1,4 +1,3 @@
-// DialogueTest.cs（確認後に削除してOK）
 using UnityEngine;
 
 public class DialogueTest : MonoBehaviour
