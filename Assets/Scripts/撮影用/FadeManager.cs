@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class FadeManager : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class FadeManager : MonoBehaviour
     [SerializeField] private float fadeDuration = 1f;
     [SerializeField] private float fadeOutDelay = 10f; // ★ 何秒後にフェードアウトするか
     [SerializeField] private string nextSceneName = "ShrineScene"; // 次のシーン名
+    [SerializeField] private Image fadePanelImage;
 
     void Awake()
     {
@@ -41,6 +43,7 @@ public class FadeManager : MonoBehaviour
 
     public IEnumerator FadeIn()
     {
+        fadePanelImage.color = Color.black;
         fadePanel.alpha = 1f;
         while (fadePanel.alpha > 0f)
         {
@@ -52,6 +55,19 @@ public class FadeManager : MonoBehaviour
 
     public IEnumerator FadeOut()
     {
+        fadePanelImage.color = Color.black;
+        fadePanel.alpha = 0f;
+        while (fadePanel.alpha < 1f)
+        {
+            fadePanel.alpha += Time.deltaTime / fadeDuration;
+            yield return null;
+        }
+        fadePanel.alpha = 1f;
+    }
+
+    public IEnumerator WhiteOut()
+    {
+        fadePanelImage.color = Color.white;
         fadePanel.alpha = 0f;
         while (fadePanel.alpha < 1f)
         {

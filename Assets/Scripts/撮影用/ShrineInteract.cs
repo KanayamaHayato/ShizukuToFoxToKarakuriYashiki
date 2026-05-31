@@ -1,3 +1,5 @@
+using Cinemachine;
+using StarterAssets;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -5,15 +7,38 @@ using UnityEngine.SceneManagement;
 public class ShrineInteract : MonoBehaviour
 {
     [Header("祠オブジェクト")]
-    [SerializeField] private GameObject brokenShrine;   // 廃墟の祠
-    [SerializeField] private GameObject fixedShrine;    // 正常な祠
+    [SerializeField] private GameObject brokenShrine;
+    [SerializeField] private GameObject fixedShrine;
 
     [Header("暗転")]
     [SerializeField] private float fadeDuration = 1.0f;
 
+    [Header("アニメーション")]
+    [SerializeField] private Animator playerAnimator;
+    [SerializeField] private RuntimeAnimatorController fixShrineController;
+    private RuntimeAnimatorController originalController;
+
+    [Header("座る位置")]
+    [SerializeField] private Transform kneelPosition;
+
+    [Header("カメラ")]
+    [SerializeField] private CinemachineVirtualCamera shrineCamera;
+    [SerializeField] private CinemachineVirtualCamera shrineFixedCamera; // 2つ目の定点カメラ
+
+    [Header("エフェクト")]
+    [SerializeField] private ParticleSystem shrineParticle;
+
+    [Header("セリフ")]
+    [SerializeField] private ShrineDialogueTrigger dialogueTrigger;
+
     private bool playerNear = false;
     private bool alreadyTouched = false;
 
+    private void Start()
+    {
+        fixedShrine.SetActive(false);
+        shrineParticle.gameObject.SetActive(false);
+    }
     void Update()
     {
         if (playerNear && !alreadyTouched && Input.GetKeyDown(KeyCode.E))
@@ -22,29 +47,82 @@ public class ShrineInteract : MonoBehaviour
 
     private IEnumerator ShrineSequence()
     {
+        dialogueTrigger.OnFixShrine();
+
         alreadyTouched = true;
         InteractUIManager.Instance.Hide();
 
-        // TODO: 手をかけるモーション再生
+        // プレイヤーを祠の前に移動
+        GameObject player = GameObject.FindWithTag("Player");
+        var cc = player.GetComponent<CharacterController>();
+        if (cc != null)
+        {
+            cc.enabled = false;
+            player.transform.position = kneelPosition.position;
+            player.transform.rotation = kneelPosition.rotation;
+            cc.enabled = true;
+        }
+        else
+        {
+            player.transform.position = kneelPosition.position;
+            player.transform.rotation = kneelPosition.rotation;
+        }
 
-        // 暗転
-        // TODO: FadeManagerを後で作る
-        yield return new WaitForSeconds(fadeDuration);
+        // 入力を無効化
+        var input = player.GetComponent<StarterAssetsInputs>();
+        if (input != null) input.move = Vector2.zero;
 
-        // 廃墟→正常に差し替え
+        // PlayerInputも無効化
+        var playerInput = player.GetComponent<UnityEngine.InputSystem.PlayerInput>();
+        if (playerInput != null) playerInput.enabled = false;
+
+        // アニメーション開始
+        originalController = playerAnimator.runtimeAnimatorController;
+        playerAnimator.runtimeAnimatorController = fixShrineController;
+
+        // カメラ切り替え
+        shrineCamera.Priority = 20; // 通常カメラより高くする
+
+        yield return new WaitForSeconds(12f);
+
+        // カメラを2つ目の定点に切り替え
+        shrineCamera.Priority = 0;
+        shrineFixedCamera.Priority = 20;
+
+        // アニメーションを元に戻す
+        playerAnimator.runtimeAnimatorController = originalController;
+
+        yield return StartCoroutine(FadeManager.Instance.FadeOut());
+
+        // 祠差し替え
         brokenShrine.SetActive(false);
         fixedShrine.SetActive(true);
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1f);
 
-        // ワープ
+        yield return StartCoroutine(FadeManager.Instance.FadeIn());
+
+        yield return new WaitForSeconds(2f);
+
+        shrineParticle.gameObject.SetActive(true);
+        shrineParticle.Play();
+
+        yield return new WaitForSeconds(3f); // 光を見せる時間
+
+        // ホワイトアウト
+        yield return StartCoroutine(FadeManager.Instance.WhiteOut());
+
+        yield return new WaitForSeconds(2f);
+
         SceneManager.LoadScene("Maze");
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log($"TriggerEnter: {other.gameObject.name}");
         if (other.CompareTag("Player"))
         {
+            Debug.Log("Playerタグ確認OK");
             playerNear = true;
             if (!alreadyTouched)
                 InteractUIManager.Instance.Show();
