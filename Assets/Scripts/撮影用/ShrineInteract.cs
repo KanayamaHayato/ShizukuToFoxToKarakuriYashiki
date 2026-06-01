@@ -30,6 +30,7 @@ public class ShrineInteract : MonoBehaviour
 
     [Header("セリフ")]
     [SerializeField] private ShrineDialogueTrigger dialogueTrigger;
+    [SerializeField] private DialogueData warpDialogue; // ワープ直前セリフ
 
     private bool playerNear = false;
     private bool alreadyTouched = false;
@@ -47,13 +48,29 @@ public class ShrineInteract : MonoBehaviour
 
     private IEnumerator ShrineSequence()
     {
-        dialogueTrigger.OnFixShrine();
-
         alreadyTouched = true;
         InteractUIManager.Instance.Hide();
-
-        // プレイヤーを祠の前に移動
         GameObject player = GameObject.FindWithTag("Player");
+
+        // 実行中のセリフを強制終了
+        DialogueManager.Instance.ForceStop();
+        yield return null; // 1フレーム待つ
+        dialogueTrigger.OnFixShrine();
+
+        // 入力を無効化
+        var input = player.GetComponent<StarterAssetsInputs>();
+        if (input != null) input.move = Vector2.zero;
+
+        // PlayerInputも無効化
+        var playerInput = player.GetComponent<UnityEngine.InputSystem.PlayerInput>();
+        if (playerInput != null) playerInput.enabled = false;
+
+        // セリフが終わるまで待つ
+        bool dialogueEnded = false;
+        DialogueManager.Instance.OnDialogueEnd += () => dialogueEnded = true;
+        yield return new WaitUntil(() => dialogueEnded);
+        
+        // プレイヤーを祠の前に移動
         var cc = player.GetComponent<CharacterController>();
         if (cc != null)
         {
@@ -67,14 +84,6 @@ public class ShrineInteract : MonoBehaviour
             player.transform.position = kneelPosition.position;
             player.transform.rotation = kneelPosition.rotation;
         }
-
-        // 入力を無効化
-        var input = player.GetComponent<StarterAssetsInputs>();
-        if (input != null) input.move = Vector2.zero;
-
-        // PlayerInputも無効化
-        var playerInput = player.GetComponent<UnityEngine.InputSystem.PlayerInput>();
-        if (playerInput != null) playerInput.enabled = false;
 
         // アニメーション開始
         originalController = playerAnimator.runtimeAnimatorController;
@@ -107,12 +116,15 @@ public class ShrineInteract : MonoBehaviour
         shrineParticle.gameObject.SetActive(true);
         shrineParticle.Play();
 
-        yield return new WaitForSeconds(3f); // 光を見せる時間
+        // ワープ直前セリフ開始
+        DialogueManager.Instance.StartDialogue(warpDialogue);
+
+        yield return new WaitForSeconds(6f); // 光を見せる時間
 
         // ホワイトアウト
         yield return StartCoroutine(FadeManager.Instance.WhiteOut());
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(3f);
 
         SceneManager.LoadScene("Maze");
     }

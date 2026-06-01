@@ -8326,6 +8326,7 @@ MonoBehaviour:
   fadeDuration: 1
   fadeOutDelay: 30
   nextSceneName: ShrineScene
+  fadePanelImage: {fileID: 875018097}
 --- !u!1 &746212728
 GameObject:
   m_ObjectHideFlags: 0

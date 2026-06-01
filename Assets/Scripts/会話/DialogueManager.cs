@@ -98,4 +98,9 @@ public class DialogueManager : MonoBehaviour
         dialogueUI.Hide();
         OnDialogueEnd?.Invoke();
     }
+    public void ForceStop()
+    {
+        isRunning = false;
+        dialogueUI.Hide();
+    }
 }
