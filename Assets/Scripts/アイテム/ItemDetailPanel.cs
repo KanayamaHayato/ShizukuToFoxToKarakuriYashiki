@@ -13,6 +13,7 @@ public class ItemDetailPanel : MonoBehaviour
     [SerializeField] private DropItemSpawner dropSpawner;
     [SerializeField] private Button useButton;
     [SerializeField] private HeartSystem heartSystem;
+    [SerializeField] private TimeStopManager timeStopManager;
 
     private ItemData currentItem;
 
@@ -39,6 +40,7 @@ public class ItemDetailPanel : MonoBehaviour
         descriptionText.text = item.description;
 
         currentItem = item;
+        useButton.interactable = true;
 
         if (item.itemType == ItemType.Heal)
         {
@@ -47,7 +49,23 @@ public class ItemDetailPanel : MonoBehaviour
 
             if (!canUse)
             {
-                descriptionText.text =item.description +　"\n<color=#FFD700><b>お札の力は満ちています。</b></color>";
+                descriptionText.text =
+                    item.description +
+                    "\n<color=#FFD700><b>お札の力は満ちています。</b></color>";
+            }
+        }
+
+        if (item.itemType == ItemType.TimeStop)
+        {
+            bool canUse = !timeStopManager.IsStopping;
+
+            useButton.interactable = canUse;
+
+            if (!canUse)
+            {
+                descriptionText.text =
+                    item.description +
+                    "\n<color=#FFD700><b>時の流れはまだ静まっていません。</b></color>";
             }
         }
     }
@@ -82,6 +100,12 @@ public class ItemDetailPanel : MonoBehaviour
         if (currentItem.itemType == ItemType.Heal)
         {
             heartSystem.Heal(currentItem.healAmount);
+            menuController.DropSelected();
+            Hide();
+        }
+        else if (currentItem.itemType == ItemType.TimeStop)
+        {
+            timeStopManager.StopEnemies(currentItem.timeStopSeconds);
             menuController.DropSelected();
             Hide();
         }
