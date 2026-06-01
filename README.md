@@ -46,6 +46,8 @@ kawaii!ฅ•ω•ฅ
 広大な大地（張りぼてｗｗｗ）
 <img width="920" height="537" alt="image" src="https://github.com/user-attachments/assets/4f4213e0-3539-466b-b696-ce01675cdcd4" />
 
+広大な大地にぽつんと一軒祠←ｗｗｗ←()
+<img width="783" height="548" alt="image" src="https://github.com/user-attachments/assets/a624beca-42d0-4518-9e22-3fdecba63691" />
 
 ---
 
@@ -79,5 +81,7 @@ kawaii!ฅ•ω•ฅ
 2026/05/31 新エリア「桜松神社」の追加！
 
 2026/06/01 「桜松神社」に祠が出現！
+
+2026/06/01 ついにまともにプレイが可能！
 
 ---
