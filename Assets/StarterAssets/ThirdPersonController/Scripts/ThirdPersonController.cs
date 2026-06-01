@@ -320,8 +320,6 @@ namespace StarterAssets
                         _animator.SetBool(_animIDJump, true);
                     }
 
-                    //HPテストのため
-                    playerDamage.JumpHeal();
 
                     _input.jump = false;
                     _jumpTimeoutDelta = JumpTimeout;

@@ -15,4 +15,7 @@ MonoBehaviour:
   itemName: "\u82B1\u6642\u9234"
   description: "\u685C\u306E\u5F62\u306E\u6642\u8A08\n(\u6642\u9593\u304C\u505C\u6B62\u306A\u308B)"
   icon: {fileID: 21300000, guid: 9b2e615fb35a69343b186a6891338c12, type: 3}
-  dropPrefab: {fileID: 0}
+  dropPrefab: {fileID: 3630748521516650298, guid: 296ca47535ac91845bacd4be6fe597ac, type: 3}
+  itemType: 1
+  healAmount: 1
+  timeStopSeconds: 5

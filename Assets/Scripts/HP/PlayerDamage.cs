@@ -33,13 +33,6 @@ public class PlayerDamage : MonoBehaviour
         }
     }
 
-    public void JumpHeal()
-    {
-        if (heartSystem.life <= 0) return;
-
-        heartSystem.Heal(1);
-    }
-
     public bool IsDead()
     {
         return heartSystem.life <= 0;
