@@ -13,4 +13,12 @@ public class ItemData : ScriptableObject
 
     [Header("World Drop")]
     public GameObject dropPrefab;
+
+    public ItemType itemType;
+
+    [Header("Heal")]
+    public int healAmount = 1;
+
+    [Header("Time Stop")]
+    public float timeStopSeconds = 5f;
 }
