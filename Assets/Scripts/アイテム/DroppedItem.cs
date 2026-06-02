@@ -4,14 +4,20 @@ using System.Collections;
 public class DroppedItem : MonoBehaviour
 {
     public ItemData itemData;
+
     private Inventory inventory;
+    private InteractPanel interactPanel;
+    private Transform player;
+
     private bool isShowing = false;
     private bool isShowingFullMessage = false;
 
     [SerializeField] private float pickupDistance = 2.0f;
-    [SerializeField] private InteractPanel interactPanel;
 
-    private Transform player;
+    void Awake()
+    {
+        interactPanel = FindObjectOfType<InteractPanel>(true);
+    }
 
     void Start()
     {
@@ -19,10 +25,9 @@ public class DroppedItem : MonoBehaviour
 
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null)
+        {
             player = playerObj.transform;
-
-        if (interactPanel == null)
-            interactPanel = FindObjectOfType<InteractPanel>(true);
+        }
     }
 
     void Update()
@@ -34,7 +39,9 @@ public class DroppedItem : MonoBehaviour
         if (distance <= pickupDistance)
         {
             if (!isShowingFullMessage)
+            {
                 interactPanel.Show("EƒL[‚ÅE‚¤");
+            }
 
             isShowing = true;
 
@@ -46,7 +53,6 @@ public class DroppedItem : MonoBehaviour
                 {
                     interactPanel.Hide();
                     Destroy(gameObject);
-                    return;
                 }
                 else
                 {
@@ -73,6 +79,15 @@ public class DroppedItem : MonoBehaviour
         yield return new WaitForSeconds(2f);
 
         isShowingFullMessage = false;
+
+        if (isShowing)
+        {
+            interactPanel.Show("EƒL[‚ÅE‚¤");
+        }
+        else
+        {
+            interactPanel.Hide();
+        }
     }
 
     public void Setup(ItemData data)
