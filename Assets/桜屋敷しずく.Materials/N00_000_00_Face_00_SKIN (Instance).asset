@@ -75,7 +75,7 @@ Material:
     - _DebugMode: 0
     - _DstBlend: 0
     - _IndirectLightIntensity: 0.1
-    - _LightColorAttenuation: 0
+    - _LightColorAttenuation: 1
     - _MToonVersion: 39
     - _OutlineColorMode: 0
     - _OutlineCullMode: 1
@@ -88,7 +88,7 @@ Material:
     - _RimLift: 0.1
     - _RimLightingMix: 0
     - _ShadeShift: -0.8
-    - _ShadeToony: 0.9
+    - _ShadeToony: 0.5
     - _ShadingGradeRate: 1
     - _SrcBlend: 1
     - _UvAnimRotation: 0
@@ -96,7 +96,7 @@ Material:
     - _UvAnimScrollY: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 0.7, g: 0.7, b: 0.7, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _OutlineColor: {r: 0.2745098, g: 0.090196066, b: 0.12549016, a: 1}
     - _RimColor: {r: 0.25, g: 0.25, b: 0.25, a: 1}
