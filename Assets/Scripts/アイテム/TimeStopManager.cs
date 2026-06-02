@@ -1,10 +1,19 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class TimeStopManager : MonoBehaviour
 {
     private bool isStopping = false;
     public bool IsStopping => isStopping;
+
+    [SerializeField] private GameObject timeStopUI;
+    [SerializeField] private Image grayMask;
+
+    void Start()
+    {
+        timeStopUI.SetActive(false);
+    }
 
     public void StopEnemies(float seconds)
     {
@@ -25,7 +34,19 @@ public class TimeStopManager : MonoBehaviour
                 script.enabled = false;
         }
 
-        yield return new WaitForSecondsRealtime(seconds);
+        timeStopUI.SetActive(true);
+        grayMask.fillAmount = 0f;
+
+        float timer = 0f;
+
+        while (timer < seconds)
+        {
+            timer += Time.deltaTime;
+
+            grayMask.fillAmount = timer / seconds;
+
+            yield return null;
+        }
 
         foreach (MonoBehaviour script in enemies)
         {
@@ -33,6 +54,7 @@ public class TimeStopManager : MonoBehaviour
                 script.enabled = true;
         }
 
+        timeStopUI.SetActive(false);
         isStopping = false;
     }
 }
