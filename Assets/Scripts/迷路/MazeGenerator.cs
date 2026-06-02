@@ -253,9 +253,46 @@ public class MazeGenerator : MonoBehaviour
         foreach (var kv in roomCount)
             sb.AppendLine($"  {kv.Key} : {kv.Value}個");
 
+        // 最下階の床（落下防止）
+        GameObject bottomFloor = new GameObject("BottomFloor");
+        bottomFloor.transform.parent = root;
+        bottomFloor.transform.position = new Vector3(
+            (width * roomSpacing) / 2f,
+            0.04f,
+            (height * roomSpacing) / 2f
+        );
+
+        var bfCol = bottomFloor.AddComponent<BoxCollider>();
+        bfCol.size = new Vector3(width * roomSpacing + 20f, 1f, height * roomSpacing + 20f);
+
+        // 見た目を追加
+        var bfFilter = bottomFloor.AddComponent<MeshFilter>();
+        bfFilter.mesh = Resources.GetBuiltinResource<Mesh>("Cube.fbx");
+        var bfRenderer = bottomFloor.AddComponent<MeshRenderer>();
+        bfRenderer.material = corridorPrefab.GetComponent<MeshRenderer>().sharedMaterial;
+        bottomFloor.transform.localScale = new Vector3(width * roomSpacing + 20f, 1f, height * roomSpacing + 20f);
+
+        // 最上階の天井
+        GameObject topCeiling = new GameObject("TopCeiling");
+        topCeiling.transform.parent = root;
+        topCeiling.transform.position = new Vector3(
+            (width * roomSpacing) / 2f,
+            (floors) * floorHeight,
+            (height * roomSpacing) / 2f
+        );
+        var tcCol = topCeiling.AddComponent<BoxCollider>();
+        tcCol.size = new Vector3(width * roomSpacing + 20f, 1f, height * roomSpacing + 20f);
+
+        // 見た目を追加
+        var tcFilter = topCeiling.AddComponent<MeshFilter>();
+        tcFilter.mesh = Resources.GetBuiltinResource<Mesh>("Cube.fbx");
+        var tcRenderer = topCeiling.AddComponent<MeshRenderer>();
+        tcRenderer.material = corridorCeilingPrefab.GetComponent<MeshRenderer>().sharedMaterial;
+        topCeiling.transform.localScale = new Vector3(width * roomSpacing + 20f, 1f, height * roomSpacing + 20f);
+
         Debug.Log(sb.ToString());
         // GenerateMaze() のフロアループが全部終わった後に追加
-        //StaticBatchingUtility.Combine(root.gameObject);
+        StaticBatchingUtility.Combine(root.gameObject);
         Debug.Log("[MazeGenerator] Static Batching 適用完了");
     }
 
