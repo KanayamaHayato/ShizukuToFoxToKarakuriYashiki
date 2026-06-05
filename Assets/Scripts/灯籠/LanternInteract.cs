@@ -17,6 +17,8 @@ public class LanternInteract : MonoBehaviour
 
     private const int LightMaterialIndex = 4;
     private Material lightMaterial;
+    private bool isReady = false; // š’Ç‰Á
+
 
     // š LanternManager‚©‚ç’¼Ú“n‚µ‚Ä‚à‚ç‚¤
     private LanternManager lanternManager;
@@ -47,7 +49,11 @@ public class LanternInteract : MonoBehaviour
         lightMaterial.SetColor("_EmissionColor", Color.black);
         mats[LightMaterialIndex] = lightMaterial;
         lanternRenderer.materials = mats;
+        // š’Ç‰Á: ¶¬’¼Œã‚ÌŒë”­‰Î‚ğ–h‚®
+        Invoke(nameof(SetReady), 0.5f);
     }
+
+    private void SetReady() => isReady = true;
 
     void Update()
     {
@@ -85,6 +91,8 @@ public class LanternInteract : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (!isReady) return; // š’Ç‰Á
+
         if (other.CompareTag("Player"))
         {
             playerNear = true;

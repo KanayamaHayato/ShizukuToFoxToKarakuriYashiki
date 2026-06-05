@@ -73,6 +73,9 @@ public class MazeGenerator : MonoBehaviour
 
     public void GenerateMaze()
     {
+        // Åöí«â¡: éñëOîzíuÇÃé¥ÇçÌèúÇµÇƒÇ©ÇÁSpawnÇ≈çƒê∂ê¨Ç≥ÇπÇÈ
+        playerSpawner.DestroyExisting();
+
         ClearMaze();
         lanternManager.Reset();
         var roomCount = new Dictionary<string, int>();
@@ -253,6 +256,9 @@ public class MazeGenerator : MonoBehaviour
         foreach (var kv in roomCount)
             sb.AppendLine($"  {kv.Key} : {kv.Value}å¬");
 
+        // ñ¿òHê∂ê¨ÇÃç≈å„Ç…í«â¡
+        FindObjectOfType<ItemSpawnerManager>()?.SpawnAll();
+
         // ç≈â∫äKÇÃè∞Åióéâ∫ñhé~Åj
         GameObject bottomFloor = new GameObject("BottomFloor");
         bottomFloor.transform.parent = root;
@@ -417,8 +423,8 @@ public class MazeGenerator : MonoBehaviour
         GameObject floor = Instantiate(corridorPrefab, center, Quaternion.identity, root);
         floor.name = corridorName + "_Floor";
         floor.transform.localScale = isX
-            ? new Vector3(length, 1f, corridorWidth)
-            : new Vector3(corridorWidth, 1f, length);
+            ? new Vector3(Mathf.Abs(length), 1f, corridorWidth)
+            : new Vector3(corridorWidth, 1f, Mathf.Abs(length));
 
         // ìVà‰
         if (corridorCeilingPrefab != null)
@@ -433,8 +439,8 @@ public class MazeGenerator : MonoBehaviour
         if (corridorWallPrefab != null)
         {
             Vector3 wallScale = isX
-                ? new Vector3(length, corridorWallHeight, 1f)
-                : new Vector3(1f, corridorWallHeight, length);
+                ? new Vector3(Mathf.Abs(length), corridorWallHeight, 1f)
+                : new Vector3(1f, corridorWallHeight, Mathf.Abs(length));
 
             Vector3 sideOffsetA = isX
                 ? new Vector3(0f, corridorWallHeight / 2f, corridorWidth / 2f)

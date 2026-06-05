@@ -27,4 +27,19 @@ public class PlayerSpawner : MonoBehaviour
 
         currentPlayer = Instantiate(playerPrefab, pos, Quaternion.identity);
     }
+
+    public void DestroyExisting()
+    {
+        if (currentPlayer != null)
+        {
+            // ★ 即時削除（同フレーム内で確実に消す）
+            DestroyImmediate(currentPlayer);
+            currentPlayer = null;
+            return;
+        }
+
+        var existing = GameObject.FindWithTag("Player");
+        if (existing != null)
+            DestroyImmediate(existing);
+    }
 }
