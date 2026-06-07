@@ -5,20 +5,24 @@ public class EnemyMove : MonoBehaviour
     public float speed = 1.5f;
     public float stopDistance = 1.5f;
 
+    [Header("視線チェック")]
+    [SerializeField] private float eyeHeight = 1.0f;        // 目の高さ
+    [SerializeField] private LayerMask obstacleLayer;       // 壁レイヤー
+
     private Transform target;
     private Rigidbody rb;
+    private bool canSeePlayer = false;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        Debug.Log($"[EnemyMove] rb={rb}");
     }
 
     public void OnDetectObject(Collider collider)
     {
         if (collider.CompareTag("Player"))
-        {
             target = collider.transform;
-        }
     }
 
     public void OnLoseObject(Collider collider)
@@ -26,7 +30,7 @@ public class EnemyMove : MonoBehaviour
         if (collider.CompareTag("Player"))
         {
             target = null;
-
+            canSeePlayer = false;
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
         }
@@ -36,30 +40,42 @@ public class EnemyMove : MonoBehaviour
     {
         if (target == null) return;
 
-        Vector3 targetPos = target.position;
-        targetPos.y = transform.position.y;
+        // 視線チェック
+        Vector3 eyePos = transform.position + Vector3.up * eyeHeight;
+        Vector3 targetPos = target.position + Vector3.up * eyeHeight;
+        Vector3 dir = targetPos - eyePos;
+        float dist = dir.magnitude;
 
-        float distance =
-            Vector3.Distance(transform.position, targetPos);
+        if (Physics.Raycast(eyePos, dir.normalized, dist, obstacleLayer))
+        {
+            // 壁に遮られている → 止まる
+            canSeePlayer = false;
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            return;
+        }
 
-        if (distance > stopDistance)
+        canSeePlayer = true;
+
+        // 追いかける
+        Vector3 flatTargetPos = target.position;
+        flatTargetPos.y = transform.position.y;
+        float flatDist = Vector3.Distance(transform.position, flatTargetPos);
+
+        if (flatDist > stopDistance)
         {
             Vector3 nextPos = Vector3.MoveTowards(
                 transform.position,
-                targetPos,
+                flatTargetPos,
                 speed * Time.fixedDeltaTime
             );
-
             rb.MovePosition(nextPos);
         }
 
-        Vector3 direction = targetPos - transform.position;
-
+        Vector3 direction = flatTargetPos - transform.position;
         if (direction != Vector3.zero)
         {
-            Quaternion rotation =
-                Quaternion.LookRotation(direction);
-
+            Quaternion rotation = Quaternion.LookRotation(direction);
             rb.MoveRotation(rotation);
         }
     }
