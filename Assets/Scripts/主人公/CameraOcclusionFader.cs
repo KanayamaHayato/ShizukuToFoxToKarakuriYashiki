@@ -27,12 +27,12 @@ public class CameraOcclusionFader : MonoBehaviour
         if (Physics.Raycast(camPos, dir.normalized, dist, wallLayer))
         {
             targetAlpha = 1f;
-            Debug.Log("壁に当たった"); // ★追加
+            //Debug.Log("壁に当たった"); // ★追加
         }
         else
         {
             targetAlpha = 0f;
-            Debug.Log("当たってない"); // ★追加
+            //Debug.Log("当たってない"); // ★追加
         }
 
         // なめらかにフェード

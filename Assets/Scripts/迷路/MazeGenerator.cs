@@ -21,7 +21,7 @@ public class MazeGenerator : MonoBehaviour
     [SerializeField] private GameObject corridorPrefab;
 
     [SerializeField] private GameObject[] lanternRoomPrefabs; // 灯籠部屋プレハブ一覧
-    [SerializeField] [Range(0, 20)] private int lanternRoomCount = 3; // 灯籠部屋の個数
+    [SerializeField][Range(0, 20)] private int lanternRoomCount = 3; // 灯籠部屋の個数
 
     // ★追加: 通路の壁と天井
     [SerializeField] private GameObject corridorWallPrefab;
@@ -231,7 +231,13 @@ public class MazeGenerator : MonoBehaviour
                         var doorTop = currentRoom.transform.Find("DoorTop");
                         var doorBottom = nextRoom.transform.Find("DoorBottom");
 
-                        CreateCorridor(doorTop, doorBottom, name);
+                        // ★ 現在の部屋か隣の部屋どちらかがスタート部屋
+                        bool isStart = f == 0 && (
+                            (x == startPos.x && y == startPos.y) ||
+                            (x == startPos.x && y + 1 == startPos.y)
+                        );
+
+                        CreateCorridor(doorTop, doorBottom, name, isStart);
                         SafeDestroy(doorTop);
                         SafeDestroy(doorBottom);
                     }
@@ -244,7 +250,13 @@ public class MazeGenerator : MonoBehaviour
                         var doorRight = currentRoom.transform.Find("DoorRight");
                         var doorLeft = nextRoom.transform.Find("DoorLeft");
 
-                        CreateCorridor(doorRight, doorLeft, name);
+                        // ★ 現在の部屋か隣の部屋どちらかがスタート部屋
+                        bool isStart = f == 0 && (
+                            (x == startPos.x && y == startPos.y) ||
+                            (x + 1 == startPos.x && y == startPos.y)
+                        );
+
+                        CreateCorridor(doorRight, doorLeft, name, isStart);
                         SafeDestroy(doorRight);
                         SafeDestroy(doorLeft);
                     }
@@ -402,7 +414,7 @@ public class MazeGenerator : MonoBehaviour
     }
 
     // ── 通路生成（壁・天井付き）──────────────────────
-    private void CreateCorridor(Transform fromDoor, Transform toDoor, string corridorName)
+    private void CreateCorridor(Transform fromDoor, Transform toDoor, string corridorName, bool isStartRoom = false)
     {
         if (fromDoor == null || toDoor == null)
         {
@@ -417,38 +429,44 @@ public class MazeGenerator : MonoBehaviour
         float length = direction.magnitude;
         bool isX = Mathf.Abs(direction.x) > Mathf.Abs(direction.z);
 
-        center.y -= 0.99f;
+        // ★ 天井高さは常に corridorWallHeight 固定（Inspectorで6に設定）
+        float wallHeight = corridorWallHeight;
+
+        // ★ 床のYだけスタート部屋かどうかで変える（扉のPosYを引いて床に合わせる）
+        float floorY = Mathf.Min(fromDoor.position.y, toDoor.position.y);
+        floorY -= isStartRoom ? 1f : 3f;
+        center.y = floorY;
 
         // 床
         GameObject floor = Instantiate(corridorPrefab, center, Quaternion.identity, root);
         floor.name = corridorName + "_Floor";
         floor.transform.localScale = isX
-            ? new Vector3(Mathf.Abs(length), 1f, corridorWidth)
-            : new Vector3(corridorWidth, 1f, Mathf.Abs(length));
+            ? new Vector3(length, 1f, corridorWidth)
+            : new Vector3(corridorWidth, 1f, length);
 
         // 天井
         if (corridorCeilingPrefab != null)
         {
-            Vector3 ceilPos = center + Vector3.up * corridorWallHeight;
+            Vector3 ceilPos = center + Vector3.up * wallHeight;
             GameObject ceil = Instantiate(corridorCeilingPrefab, ceilPos, Quaternion.identity, root);
             ceil.name = corridorName + "_Ceiling";
             ceil.transform.localScale = floor.transform.localScale;
         }
 
-        // 壁（通路の両側）
+        // 壁
         if (corridorWallPrefab != null)
         {
             Vector3 wallScale = isX
-                ? new Vector3(Mathf.Abs(length), corridorWallHeight, 1f)
-                : new Vector3(1f, corridorWallHeight, Mathf.Abs(length));
+                ? new Vector3(length, wallHeight, 1f)
+                : new Vector3(1f, wallHeight, length);
 
             Vector3 sideOffsetA = isX
-                ? new Vector3(0f, corridorWallHeight / 2f, corridorWidth / 2f)
-                : new Vector3(corridorWidth / 2f, corridorWallHeight / 2f, 0f);
+                ? new Vector3(0f, wallHeight / 2f, corridorWidth / 2f)
+                : new Vector3(corridorWidth / 2f, wallHeight / 2f, 0f);
 
             Vector3 sideOffsetB = isX
-                ? new Vector3(0f, corridorWallHeight / 2f, -corridorWidth / 2f)
-                : new Vector3(-corridorWidth / 2f, corridorWallHeight / 2f, 0f);
+                ? new Vector3(0f, wallHeight / 2f, -corridorWidth / 2f)
+                : new Vector3(-corridorWidth / 2f, wallHeight / 2f, 0f);
 
             GameObject wallA = Instantiate(corridorWallPrefab, center + sideOffsetA, Quaternion.identity, root);
             wallA.name = corridorName + "_WallA";
@@ -458,6 +476,7 @@ public class MazeGenerator : MonoBehaviour
             wallB.name = corridorName + "_WallB";
             wallB.transform.localScale = wallScale;
         }
+        Debug.Log($"[Corridor] {corridorName} isStartRoom={isStartRoom} wallHeight={wallHeight}");
     }
 
     // 生成時に全Doorの存在を検証するメソッドを追加
@@ -473,7 +492,7 @@ public class MazeGenerator : MonoBehaviour
                 Debug.LogError(
                     $"[MazeGenerator] {roomName} に '{doorName}' がありません！" +
                     $"\nPrefab: {room.name}",
-                    room  // ← クリックするとProjectウィンドウでそのプレハブが選択される
+                    room
                 );
                 allFound = false;
             }
