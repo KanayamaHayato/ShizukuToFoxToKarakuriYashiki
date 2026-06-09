@@ -309,7 +309,22 @@ public class MazeGenerator : MonoBehaviour
         topCeiling.transform.localScale = new Vector3(width * roomSpacing + 20f, 1f, height * roomSpacing + 20f);
 
         Debug.Log(sb.ToString());
-        // GenerateMaze() のフロアループが全部終わった後に追加
+
+        var enemySpawnManager = FindObjectOfType<EnemySpawnManager>();
+        if (enemySpawnManager != null)
+        {
+            var rooms = new List<GameObject>();
+            for (int f = 0; f < floors; f++)
+                for (int x = 0; x < width; x++)
+                    for (int y = 0; y < height; y++)
+                        if (roomObjects[f, x, y] != null)
+                            rooms.Add(roomObjects[f, x, y]);
+
+            enemySpawnManager.RegisterRooms(rooms);
+            enemySpawnManager.StartSpawning();
+        }
+
+        // GenerateMaze() のフロアループが全部終わった後に追加すること
         StaticBatchingUtility.Combine(root.gameObject);
         Debug.Log("[MazeGenerator] Static Batching 適用完了");
     }

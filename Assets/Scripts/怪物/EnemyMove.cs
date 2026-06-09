@@ -8,6 +8,7 @@ public class EnemyMove : MonoBehaviour
     [Header("視線チェック")]
     [SerializeField] private float eyeHeight = 1.0f;        // 目の高さ
     [SerializeField] private LayerMask obstacleLayer;       // 壁レイヤー
+    public bool CanSeePlayer { get; private set; } = false;
 
     private Transform target;
     private Rigidbody rb;
@@ -49,13 +50,13 @@ public class EnemyMove : MonoBehaviour
         if (Physics.Raycast(eyePos, dir.normalized, dist, obstacleLayer))
         {
             // 壁に遮られている → 止まる
-            canSeePlayer = false;
+            CanSeePlayer = false;
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
             return;
         }
 
-        canSeePlayer = true;
+        CanSeePlayer = true;
 
         // 追いかける
         Vector3 flatTargetPos = target.position;
