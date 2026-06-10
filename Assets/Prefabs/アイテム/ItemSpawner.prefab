@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnEntries:
-  - itemPrefab: {fileID: 3630748521516650298, guid: aabd703b287204a4bb63363962597da2, type: 3}
+  - itemPrefab: {fileID: 3056026893688772744, guid: 4ded7d318d0ba9744ab88142f5771997, type: 3}
     weight: 5
   - itemPrefab: {fileID: 3630748521516650298, guid: 296ca47535ac91845bacd4be6fe597ac, type: 3}
     weight: 5
