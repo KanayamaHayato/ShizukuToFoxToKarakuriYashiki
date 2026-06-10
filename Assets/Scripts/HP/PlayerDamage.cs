@@ -25,14 +25,6 @@ public class PlayerDamage : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Enemy"))
-        {
-            Damage();
-        }
-    }
-
     public bool IsDead()
     {
         return heartSystem.life <= 0;
