@@ -34,7 +34,7 @@ public class ItemSpawner : MonoBehaviour
 
         GameObject selected = WeightedRandom();
         if (selected != null)
-            Instantiate(selected, transform.position, transform.rotation, transform.parent);
+            Instantiate(selected, transform.position, selected.transform.rotation, transform.parent);
 
         HasSpawned = true;
     }
