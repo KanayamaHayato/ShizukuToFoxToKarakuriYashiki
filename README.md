@@ -58,9 +58,10 @@
 |---|---|
 | <img width="400" alt="スクリーンショット 2026-06-02 234015" src="https://github.com/user-attachments/assets/90a8be5f-2b58-4c6c-93b3-93d0ea1c0d50" /> | <img width="400" alt="スクリーンショット 2026-06-02 235942" src="https://github.com/user-attachments/assets/e7512756-c8fc-45ca-ac10-1d887874d959" /> |
 
-|灯追い人（仮）|
-|---|
-|<img width="400" alt="スクリーンショット 2026-06-07 205940" src="https://github.com/user-attachments/assets/f05953c8-e32a-48a0-8219-0df1790c8fc4" />|
+|灯追い人（仮）||
+|---|---|
+|<img width="400" alt="スクリーンショット 2026-06-07 205940" src="https://github.com/user-attachments/assets/f05953c8-e32a-48a0-8219-0df1790c8fc4" />|<img width="400" alt="スクリーンショット 2026-06-10 141343" src="https://github.com/user-attachments/assets/a434bc28-ada4-4d02-8856-c028651f3075" />
+|
 
 
 ---
