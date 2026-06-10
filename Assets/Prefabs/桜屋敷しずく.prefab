@@ -4450,6 +4450,7 @@ MonoBehaviour:
   zoomSpeed: 2
   minDistance: 1
   maxDistance: 2.5
+  isEnabled: 1
 --- !u!1 &7272987398353345243
 GameObject:
   m_ObjectHideFlags: 0
@@ -6243,7 +6244,7 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  m_CustomBlends: {fileID: 0}
+  m_CustomBlends: {fileID: 11400000, guid: e3e9fd41cdb26a745ba2c55d37674780, type: 2}
   m_CameraCutEvent:
     m_PersistentCalls:
       m_Calls: []

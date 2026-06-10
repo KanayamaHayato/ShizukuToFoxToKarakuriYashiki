@@ -6,19 +6,21 @@ public class EnemyAttack : MonoBehaviour
 {
     [Header("演出")]
     [SerializeField] private string facePointName = "FacePoint";
-    [SerializeField] private float closeUpDistance = 1.5f;  // 顔からカメラの距離
-    [SerializeField] private float closeUpDuration = 2.0f;  // ドアップの時間
-    [SerializeField] private float fadeDuration = 1.0f;     // 霧消えの時間
+    [SerializeField] private float closeUpDuration = 2.0f;
+    [SerializeField] private float fadeDuration = 1.0f;
 
     [Header("霧エフェクト")]
-    [SerializeField] private ParticleSystem fogEffect;      // 消滅時のパーティクル
+    [SerializeField] private ParticleSystem fogEffect;
+
+    [Header("ワープ設定")]
+    [SerializeField] private float warpDistance = 2f;   // 怪物との距離
+    [SerializeField] private float warpHeightOffset = 0f; // 雫の高さ調整
 
     private bool hasAttacked = false;
     private Transform facePoint;
 
     void Start()
     {
-        // FacePointを再帰的に探す
         facePoint = FindDeepChild(transform, facePointName);
         if (facePoint == null)
             Debug.LogWarning("[EnemyAttack] FacePointが見つかりません。");
@@ -43,73 +45,111 @@ public class EnemyAttack : MonoBehaviour
         // ① 操作不能にする
         var controller = player.GetComponent<StarterAssets.ThirdPersonController>();
         if (controller != null) controller.enabled = false;
+        // ★ ワープ前に怪物のColliderを無効化
+        // ★ 怪物のRigidbodyをKinematicにして物理演算を止める
+        var rb = GetComponent<Rigidbody>();
+        if (rb != null) rb.isKinematic = true;
 
-        // ② カメラを怪物のドアップに切り替え
-        var brain = FindObjectOfType<CinemachineBrain>();
-        var virtualCam = FindObjectOfType<CinemachineVirtualCamera>();
-        Transform originalFollow = null;
-        Transform originalLookAt = null;
-
-        if (virtualCam != null && facePoint != null)
+        // ★ 雫を怪物の正面にワープ
+        if (facePoint != null)
         {
-            originalFollow = virtualCam.Follow;
-            originalLookAt = virtualCam.LookAt;
+            Vector3 warpPos = facePoint.position + transform.forward * warpDistance;
+            warpPos.y += warpHeightOffset;
+            player.transform.position = warpPos;
+            player.transform.rotation = Quaternion.LookRotation(-transform.forward);
+        }
+        // ★ 雫のアニメーションを止める
+        var playerAnimator = player.GetComponentInChildren<Animator>();
+        if (playerAnimator != null)
+            playerAnimator.SetFloat("Speed", 0f);
 
-            // カメラを顔の前に移動
-            virtualCam.Follow = facePoint;
-            virtualCam.LookAt = facePoint;
+        // 怪物の動きを止める
+        var enemyMove = GetComponent<EnemyMove>();
+        var animator = GetComponentInChildren<Animator>();
+        if (animator != null)
+            animator.SetTrigger("Attack");
+        if (enemyMove != null) enemyMove.enabled = false;
+
+        // ズーム無効化
+        var cameraZoom = FindObjectOfType<CameraZoom>();
+        if (cameraZoom != null) cameraZoom.isEnabled = false;
+
+        // ② CloseUpCameraをPriorityで切り替え
+        var closeUpCamObj = GameObject.Find("CloseUpCamera");
+        CinemachineVirtualCamera closeUpCam = closeUpCamObj
+            ?.GetComponent<CinemachineVirtualCamera>();
+
+        if (closeUpCam != null && facePoint != null)
+        {
+            // ★ 怪物の正面にカメラターゲットを配置（雫と同じ方式）
+            GameObject camTarget = new GameObject("CamTarget");
+            camTarget.transform.position = facePoint.position + transform.forward * 3f;
+            camTarget.transform.rotation = Quaternion.LookRotation(-transform.forward);
+
+            closeUpCam.Follow = camTarget.transform;
+            closeUpCam.LookAt = facePoint;
+            closeUpCam.Priority = 20;
+
+            Destroy(camTarget, closeUpDuration + fadeDuration + 1f);
+        }
+        else
+        {
+            Debug.LogWarning("[EnemyAttack] CloseUpCameraが見つかりません。");
         }
 
-        // ③ ドアップを一定時間維持
-        yield return new WaitForSeconds(closeUpDuration);
+        // ③ 赤いライトを生成
+        GameObject lightObj = new GameObject("AttackLight");
+        Light attackLight = lightObj.AddComponent<Light>();
+        attackLight.color = Color.red;
+        attackLight.intensity = 3f;
+        attackLight.range = 10f;
+        lightObj.transform.position = facePoint.position;
+        lightObj.transform.SetParent(facePoint);
 
-        // ④ お札を1枚減らす
+        // ④ ドアップを一定時間維持
+        yield return new WaitForSeconds(closeUpDuration);
+        Destroy(lightObj);
+
+        // ⑤ お札を1枚減らす
         playerDamage.heartSystem.TakeDamage(1);
         if (playerDamage.heartSystem.life <= 0)
         {
             playerDamage.heartSystem.UpdateHearts();
-            // ゲームオーバー処理はGameOverManagerに委譲
+            if (closeUpCam != null) closeUpCam.Priority = -1;
+            if (cameraZoom != null) cameraZoom.isEnabled = true;
             FindObjectOfType<GameOverManager>()?.ShowGameOver();
             yield break;
         }
 
-        // ⑤ 霧のように消えていく
-        if (fogEffect != null) fogEffect.Play();
-
-        // メッシュを徐々にフェードアウト
-        var renderers = GetComponentsInChildren<Renderer>();
-        float elapsed = 0f;
-        while (elapsed < fadeDuration)
-        {
-            elapsed += Time.deltaTime;
-            float alpha = 1f - Mathf.Clamp01(elapsed / fadeDuration);
-            foreach (var r in renderers)
-            {
-                foreach (var mat in r.materials)
-                {
-                    Color c = mat.color;
-                    c.a = alpha;
-                    mat.color = c;
-                }
-            }
-            yield return null;
-        }
-
-        // ⑥ カメラを元に戻す
-        if (virtualCam != null)
-        {
-            virtualCam.Follow = originalFollow;
-            virtualCam.LookAt = originalLookAt;
-        }
-
-        // ⑦ 操作再開
+        // ⑥ CloseUpCameraを戻す・操作再開
+        if (closeUpCam != null) closeUpCam.Priority = -1;
+        if (cameraZoom != null) cameraZoom.isEnabled = true;
         if (controller != null) controller.enabled = true;
 
-        // ⑧ 怪物を消滅
+        // ⑦ 霧パーティクルを怪物から切り離して再生
+        if (fogEffect != null)
+        {
+            Debug.Log("[EnemyAttack] 霧再生");
+            fogEffect.transform.SetParent(null);
+            fogEffect.Play();
+            Destroy(fogEffect.gameObject, fogEffect.main.duration);
+        }
+        else
+        {
+            Debug.Log("[EnemyAttack] fogEffectがnull");
+        }
+
+        // ⑧ 怪物本体のRendererとColliderを無効化（霧は切り離し済みなので影響なし）
+        foreach (var r in GetComponentsInChildren<Renderer>())
+            r.enabled = false;
+        foreach (var col in GetComponentsInChildren<Collider>())
+            col.enabled = false;
+
+        // ⑨ フェードアウト待ち後に怪物消滅
+        yield return new WaitForSeconds(fadeDuration);
         Destroy(gameObject);
     }
 
-    // 再帰的に子オブジェクトを探す
     private Transform FindDeepChild(Transform parent, string name)
     {
         foreach (Transform child in parent)
