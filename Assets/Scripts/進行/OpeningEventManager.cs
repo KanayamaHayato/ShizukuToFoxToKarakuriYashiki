@@ -3,104 +3,35 @@ using UnityEngine;
 
 public class OpeningEventManager : MonoBehaviour
 {
-    [Header("参照")]
-    [SerializeField] private GameObject enemyPrefab;
-    [SerializeField] private CanvasGroup fadeCanvasGroup; // 黒いCanvasGroup
-
-    [Header("設定")]
-    [SerializeField] private float waitBeforeEnemy = 1f;
-    [SerializeField] private float waitBeforeFade = 2f;
+    [SerializeField] private DialogueData openingDialogue; // セリフデータ
+    [SerializeField] private CanvasGroup fadeCanvasGroup;
     [SerializeField] private float fadeDuration = 1f;
+    [SerializeField] private string nextSceneName = "Maze";
 
-    private bool hasPlayed = false;
-
-    public void PlayOpeningEvent(GameObject startRoom, GameObject[] neighborRooms)
+    // Signal_StartDialogueから呼ぶ
+    public void StartOpeningDialogue()
     {
-        if (hasPlayed) return;
-        hasPlayed = true;
-        StartCoroutine(OpeningSequence(startRoom, neighborRooms));
+        if (openingDialogue != null)
+            DialogueManager.Instance.StartDialogue(openingDialogue);
     }
 
-    private IEnumerator OpeningSequence(GameObject startRoom, GameObject[] neighborRooms)
+    // Signal_FadeOutから呼ぶ
+    public void TriggerFadeOut()
     {
-        var player = GameObject.FindWithTag("Player");
-        if (player == null) yield break;
-
-        // ① 操作不能にする
-        var controller = player.GetComponent<StarterAssets.ThirdPersonController>();
-        if (controller != null) controller.enabled = false;
-
-        // ② 雫を隣の部屋にワープ
-        if (neighborRooms != null && neighborRooms.Length > 0)
-        {
-            var neighborRoom = neighborRooms[Random.Range(0, neighborRooms.Length)];
-            var spawnPoint = neighborRoom.transform.Find("SpawnPoint");
-            Vector3 warpPos = spawnPoint != null
-                ? spawnPoint.position
-                : neighborRoom.transform.position + Vector3.up;
-
-            var cc = player.GetComponent<CharacterController>();
-            if (cc != null) cc.enabled = false;
-            player.transform.position = warpPos;
-            if (cc != null) cc.enabled = true;
-        }
-
-        yield return new WaitForSeconds(waitBeforeEnemy);
-
-        // ③ 怪物をスポーン
-        Vector3 enemyPos = player.transform.position + player.transform.forward * 3f;
-        GameObject enemy = Instantiate(enemyPrefab, enemyPos, Quaternion.identity);
-
-        // ④ EnemyAttackのオープニング演出
-        var enemyAttack = enemy.GetComponent<EnemyAttack>();
-        if (enemyAttack != null)
-            enemyAttack.TriggerOpening(player);
-
-        yield return new WaitForSeconds(waitBeforeFade);
-
-        // ⑤ 暗転
-        yield return StartCoroutine(FadeOut());
-
-        // ⑥ 怪物を消す
-        if (enemy != null) Destroy(enemy);
-
-        // ⑦ 雫を初期部屋にワープ
-        var startSpawnPoint = startRoom.transform.Find("SpawnPoint");
-        Vector3 startPos = startSpawnPoint != null
-            ? startSpawnPoint.position
-            : startRoom.transform.position + Vector3.up;
-
-        var cc2 = player.GetComponent<CharacterController>();
-        if (cc2 != null) cc2.enabled = false;
-        player.transform.position = startPos;
-        if (cc2 != null) cc2.enabled = true;
-
-        // ⑧ 暗転解除
-        yield return StartCoroutine(FadeIn());
-
-        // ⑨ 操作再開
-        if (controller != null) controller.enabled = true;
+        StartCoroutine(FadeOutAndLoad());
     }
 
-    private IEnumerator FadeOut()
+    private IEnumerator FadeOutAndLoad()
     {
+        // 暗転
         fadeCanvasGroup.alpha = 0f;
         while (fadeCanvasGroup.alpha < 1f)
         {
             fadeCanvasGroup.alpha += Time.deltaTime / fadeDuration;
             yield return null;
         }
-        fadeCanvasGroup.alpha = 1f;
-    }
 
-    private IEnumerator FadeIn()
-    {
-        fadeCanvasGroup.alpha = 1f;
-        while (fadeCanvasGroup.alpha > 0f)
-        {
-            fadeCanvasGroup.alpha -= Time.deltaTime / fadeDuration;
-            yield return null;
-        }
-        fadeCanvasGroup.alpha = 0f;
+        // 次のシーンへ
+        UnityEngine.SceneManagement.SceneManager.LoadScene(nextSceneName);
     }
 }

@@ -324,14 +324,6 @@ public class MazeGenerator : MonoBehaviour
             enemySpawnManager.StartSpawning();
         }
 
-        var openingEvent = FindObjectOfType<OpeningEventManager>();
-        if (openingEvent != null)
-        {
-            // 初期部屋の隣の部屋を取得
-            var neighborRooms = GetNeighborRooms(0, startPos.x, startPos.y);
-            openingEvent.PlayOpeningEvent(roomObjects[0, startPos.x, startPos.y], neighborRooms);
-        }
-
         // GenerateMaze() のフロアループが全部終わった後に追加すること
         StaticBatchingUtility.Combine(root.gameObject);
         Debug.Log("[MazeGenerator] Static Batching 適用完了");
