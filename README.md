@@ -58,11 +58,11 @@
 |---|---|
 | <img width="400" alt="スクリーンショット 2026-06-02 234015" src="https://github.com/user-attachments/assets/90a8be5f-2b58-4c6c-93b3-93d0ea1c0d50" /> | <img width="400" alt="スクリーンショット 2026-06-02 235942" src="https://github.com/user-attachments/assets/e7512756-c8fc-45ca-ac10-1d887874d959" /> |
 
-|灯追い人（仮）||
+|灯追い人（仮）|アニメーションを作ってます|
 |---|---|
 |<img width="400" alt="スクリーンショット 2026-06-07 205940" src="https://github.com/user-attachments/assets/f05953c8-e32a-48a0-8219-0df1790c8fc4" />|<img width="400" alt="スクリーンショット 2026-06-10 141343" src="https://github.com/user-attachments/assets/a434bc28-ada4-4d02-8856-c028651f3075" />|
 
-|作成中の悲劇||
+|作成中の悲劇|999個の謎エラーXD|
 |---|---|
 |<img width="400" alt="image" src="https://github.com/user-attachments/assets/c90a1358-6c34-453d-9cbc-632d66292288" />|<img width="400" alt="image" src="https://github.com/user-attachments/assets/7be03264-ba85-4383-84e3-112eb514e9fc" />|
 
