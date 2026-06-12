@@ -571,4 +571,22 @@ public class MazeGenerator : MonoBehaviour
             }
         }
     }
+
+    // —×‚Ì•”‰®‚ğæ“¾‚·‚éƒƒ\ƒbƒh‚ğ’Ç‰Á
+    private GameObject[] GetNeighborRooms(int floor, int x, int y)
+    {
+        var neighbors = new System.Collections.Generic.List<GameObject>();
+        int[] dx = { 0, 0, -1, 1 };
+        int[] dy = { 1, -1, 0, 0 };
+
+        for (int i = 0; i < 4; i++)
+        {
+            int nx = x + dx[i];
+            int ny = y + dy[i];
+            if (nx >= 0 && ny >= 0 && nx < width && ny < height)
+                if (roomObjects[floor, nx, ny] != null)
+                    neighbors.Add(roomObjects[floor, nx, ny]);
+        }
+        return neighbors.ToArray();
+    }
 }

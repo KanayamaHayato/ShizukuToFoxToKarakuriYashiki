@@ -160,4 +160,62 @@ public class EnemyAttack : MonoBehaviour
         }
         return null;
     }
+
+    /// <summary>
+    /// オープニングイベント用：ダメージなしで演出だけ流す
+    /// </summary>
+    public void TriggerOpening(GameObject player)
+    {
+        if (hasAttacked) return;
+        hasAttacked = true;
+        facePoint = FindDeepChild(transform, facePointName);
+        if (facePoint == null)
+        {
+            Debug.LogWarning("[EnemyAttack] TriggerOpening: FacePointが見つかりません。");
+            return;
+        }
+
+        StartCoroutine(OpeningSequence(player));
+    }
+
+    private IEnumerator OpeningSequence(GameObject player)
+    {
+        // 怪物の動きを止める
+        var enemyMove = GetComponent<EnemyMove>();
+        if (enemyMove != null) enemyMove.enabled = false;
+
+        // ズーム無効化
+        var cameraZoom = FindObjectOfType<CameraZoom>();
+        if (cameraZoom != null) cameraZoom.isEnabled = false;
+
+        // CloseUpCameraをPriorityで切り替え
+        var closeUpCamObj = GameObject.Find("CloseUpCamera");
+        CinemachineVirtualCamera closeUpCam = closeUpCamObj
+            ?.GetComponent<CinemachineVirtualCamera>();
+
+        if (closeUpCam != null && facePoint != null)
+        {
+            closeUpCam.Follow = facePoint;
+            closeUpCam.LookAt = facePoint;
+            closeUpCam.Priority = 20;
+        }
+
+        // 赤いライト
+        GameObject lightObj = new GameObject("AttackLight");
+        Light attackLight = lightObj.AddComponent<Light>();
+        attackLight.color = Color.red;
+        attackLight.intensity = 3f;
+        attackLight.range = 10f;
+        lightObj.transform.position = facePoint.position;
+        lightObj.transform.SetParent(facePoint);
+
+        yield return new WaitForSeconds(closeUpDuration);
+
+        // ライトとカメラを戻す
+        Destroy(lightObj);
+        if (closeUpCam != null) closeUpCam.Priority = -1;
+        if (cameraZoom != null) cameraZoom.isEnabled = true;
+
+        // ★ ダメージなしで終了（怪物はOpeningEventManagerが管理）
+    }
 }
