@@ -324,6 +324,14 @@ public class MazeGenerator : MonoBehaviour
             enemySpawnManager.StartSpawning();
         }
 
+        var openingEvent = FindObjectOfType<OpeningEventManager>();
+        if (openingEvent != null)
+        {
+            // 初期部屋の隣の部屋を取得
+            var neighborRooms = GetNeighborRooms(0, startPos.x, startPos.y);
+            openingEvent.PlayOpeningEvent(roomObjects[0, startPos.x, startPos.y], neighborRooms);
+        }
+
         // GenerateMaze() のフロアループが全部終わった後に追加すること
         StaticBatchingUtility.Combine(root.gameObject);
         Debug.Log("[MazeGenerator] Static Batching 適用完了");
@@ -570,5 +578,23 @@ public class MazeGenerator : MonoBehaviour
                 }
             }
         }
+    }
+
+    // 隣の部屋を取得するメソッドを追加
+    private GameObject[] GetNeighborRooms(int floor, int x, int y)
+    {
+        var neighbors = new System.Collections.Generic.List<GameObject>();
+        int[] dx = { 0, 0, -1, 1 };
+        int[] dy = { 1, -1, 0, 0 };
+
+        for (int i = 0; i < 4; i++)
+        {
+            int nx = x + dx[i];
+            int ny = y + dy[i];
+            if (nx >= 0 && ny >= 0 && nx < width && ny < height)
+                if (roomObjects[floor, nx, ny] != null)
+                    neighbors.Add(roomObjects[floor, nx, ny]);
+        }
+        return neighbors.ToArray();
     }
 }
