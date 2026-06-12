@@ -63,9 +63,8 @@
 |<img width="400" alt="スクリーンショット 2026-06-07 205940" src="https://github.com/user-attachments/assets/f05953c8-e32a-48a0-8219-0df1790c8fc4" />|<img width="400" alt="スクリーンショット 2026-06-10 141343" src="https://github.com/user-attachments/assets/a434bc28-ada4-4d02-8856-c028651f3075" />|
 
 |作成中の悲劇||
-|---||
-|<img width="400" alt="image" src="https://github.com/user-attachments/assets/c90a1358-6c34-453d-9cbc-632d66292288" />|<img width="400" alt="image" src="https://github.com/user-attachments/assets/7be03264-ba85-4383-84e3-112eb514e9fc" />
-|
+|---|---|
+|<img width="400" alt="image" src="https://github.com/user-attachments/assets/c90a1358-6c34-453d-9cbc-632d66292288" />|<img width="400" alt="image" src="https://github.com/user-attachments/assets/7be03264-ba85-4383-84e3-112eb514e9fc" />|
 
 
 ---
