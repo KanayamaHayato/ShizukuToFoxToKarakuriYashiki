@@ -8323,8 +8323,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fadePanel: {fileID: 875018096}
-  fadeDuration: 1
-  fadeOutDelay: 30
+  fadeDuration: 2
+  fadeOutDelay: 33
   nextSceneName: ShrineScene
   fadePanelImage: {fileID: 875018097}
 --- !u!1 &746212728
@@ -20618,6 +20618,11 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1734913935 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6415723855385250421, guid: 70b46c2416350c742ad396cc60d70119, type: 3}
+  m_PrefabInstance: {fileID: 6827620452853897342}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1738318635
 GameObject:
   m_ObjectHideFlags: 0
@@ -20883,6 +20888,56 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1746361196
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1746361197}
+  - component: {fileID: 1746361198}
+  m_Layer: 0
+  m_Name: SceneIntroManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1746361197
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1746361196}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 960, y: 540, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1746361198
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1746361196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9aa7809781ef02244930b3ebdc08c3cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fadeImage: {fileID: 875018097}
+  chimeAudio: {fileID: 0}
+  chimeDuration: 3
+  fadeInDuration: 2
+  autoWalkTarget: {fileID: 1734913935}
+  dialogueStarter: {fileID: 1645660308}
 --- !u!1 &1749441989
 GameObject:
   m_ObjectHideFlags: 0
@@ -25593,13 +25648,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4192362115763140274, guid: 70b46c2416350c742ad396cc60d70119, type: 3}
+      propertyPath: stopAtTime
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 4192362115763140274, guid: 70b46c2416350c742ad396cc60d70119, type: 3}
+      propertyPath: stopDuration
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 4192362115763140278, guid: 70b46c2416350c742ad396cc60d70119, type: 3}
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4192362115763140278, guid: 70b46c2416350c742ad396cc60d70119, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 228.12
+      value: 232.16
       objectReference: {fileID: 0}
     - target: {fileID: 4192362115763140278, guid: 70b46c2416350c742ad396cc60d70119, type: 3}
       propertyPath: m_LocalPosition.y
