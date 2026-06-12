@@ -2,7 +2,7 @@ using UnityEngine;
 public class OPDialogueStarter : MonoBehaviour
 {
     [SerializeField] private DialogueData dialogueData;
-    void Start()
+    public void StartDialogue()
     {
         DialogueManager.Instance.StartDialogue(dialogueData);
     }

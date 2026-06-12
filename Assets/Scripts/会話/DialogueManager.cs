@@ -17,6 +17,7 @@ public class DialogueManager : MonoBehaviour
     private bool isRunning = false;
 
     public event Action OnDialogueEnd;
+    public bool IsRunning => isRunning;
 
     void Awake()
     {
@@ -26,6 +27,7 @@ public class DialogueManager : MonoBehaviour
             return;
         }
         Instance = this;
+        dialogueUI.Hide();
     }
 
     public void StartDialogue(DialogueData data)
