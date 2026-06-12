@@ -593,7 +593,7 @@ RectTransform:
   - {fileID: 7272987398385502922}
   - {fileID: 3972927704624344531}
   m_Father: {fileID: 7272987399324926239}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -749,13 +749,13 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7272987399324926239}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 50}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: -0.000061035156, y: 0}
+  m_SizeDelta: {x: 100, y: 25}
+  m_Pivot: {x: 0, y: 1}
 --- !u!222 &958508885509721834
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -784,7 +784,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "E\u30AD\u30FC\u3067\u5165\u624B"
+  m_text: "[E]\u8ABF\u3079\u308B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d70706ad9eb554e43b97eadaa4bde3f0, type: 2}
   m_sharedMaterial: {fileID: 4475032281811168975, guid: d70706ad9eb554e43b97eadaa4bde3f0, type: 2}
@@ -811,7 +811,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 34.5
+  m_fontSize: 18
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -7569,8 +7569,8 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4997647193207156932}
   - {fileID: 6644474870742834357}
+  - {fileID: 4997647193207156932}
   - {fileID: 2197452286403329090}
   - {fileID: 1976912879751932065}
   m_Father: {fileID: 7272987397892445607}
