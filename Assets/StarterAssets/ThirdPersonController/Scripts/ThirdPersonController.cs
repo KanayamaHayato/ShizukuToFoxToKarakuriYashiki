@@ -203,23 +203,21 @@ namespace StarterAssets
                     _verticalVelocity = -2f;
 
                 // Jump
-                if (_input.jump && _jumpTimeoutDelta <= 0.0f)
+                if (_input.jump && _jumpTimeoutDelta <= 0.0f && Grounded) // ← Groundedを追加
                 {
                     _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
                     if (_hasAnimator)
                         _animator.SetBool(_animIDJump, true);
 
-
                     _input.jump = false;
                     _jumpTimeoutDelta = JumpTimeout;
                 }
 
-                if (_jumpTimeoutDelta >= 0.0f)
+                if (_jumpTimeoutDelta > 0.0f)
                     _jumpTimeoutDelta -= Time.deltaTime;
             }
             else
             {
-                _jumpTimeoutDelta = JumpTimeout;
                 if (_fallTimeoutDelta >= 0.0f)
                     _fallTimeoutDelta -= Time.deltaTime;
                 else
