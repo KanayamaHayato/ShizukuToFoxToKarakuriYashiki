@@ -20,12 +20,21 @@ public class YajiroEventManager : MonoBehaviour
     [SerializeField] private DialogueData dialoguePart2; // 「下を見ろ！」
     [SerializeField] private DialogueData dialoguePart3; // 目が合った後
 
+    [Header("最終部屋やじろ位置")]
+    [SerializeField] private Transform yajiroFinalTransform;
+
     private GameObject player;
     private MonoBehaviour playerController;
     private MonoBehaviour playerInput;
 
     void Start()
     {
+        if (SaveManager.Instance != null && SaveManager.Instance.loadPending)
+        {
+            SaveManager.Instance.ConsumePending();
+            return;
+        }
+
         Debug.Log("[YajiroEventManager] Start()呼ばれた");
         StartCoroutine(WaitForPlayerAndStart());
     }
@@ -124,6 +133,19 @@ public class YajiroEventManager : MonoBehaviour
         {
             yajiroAnimator.SetBool("IsUppereye", false);
             yajiroObject.SetActive(false);
+        }
+
+        // やじろを最終部屋の位置に移動して非表示
+        if (yajiroObject != null && yajiroFinalTransform != null)
+        {
+            Debug.Log($"[YajiroEventManager] やじろを最終部屋に移動: {yajiroFinalTransform.position}");
+            yajiroObject.transform.position = yajiroFinalTransform.position;
+            yajiroObject.transform.rotation = yajiroFinalTransform.rotation;
+            yajiroObject.SetActive(false);
+        }
+        else
+        {
+            Debug.LogError($"[YajiroEventManager] 移動失敗 yajiroObject={yajiroObject?.name ?? "NULL"} yajiroFinalTransform={yajiroFinalTransform?.name ?? "NULL"}");
         }
 
         yield return new WaitForSeconds(0.3f);

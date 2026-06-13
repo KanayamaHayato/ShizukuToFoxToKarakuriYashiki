@@ -10,7 +10,7 @@ public class LoreUI : MonoBehaviour
     [SerializeField] private Sprite photoSprite;     // å„Ç©ÇÁç∑Çµë÷Ç¶â¬î\
     [SerializeField] private float fadeTime = 1.0f;
     [SerializeField] private float displayTime = 3.0f;
-
+    public bool IsShowing { get; private set; } = false;
     void Start()
     {
         root.SetActive(false);

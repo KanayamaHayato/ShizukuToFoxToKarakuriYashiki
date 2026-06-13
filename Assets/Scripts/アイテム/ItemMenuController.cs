@@ -30,13 +30,15 @@ public class ItemMenuController : MonoBehaviour
 
     public void Refresh()
     {
+        var inv = inventory != null ? inventory : Inventory.Instance;
+        if (inv == null) return;
+
         for (int i = 0; i < slots.Length; i++)
         {
-            ItemData item = inventory.GetItem(i);
+            ItemData item = inv.GetItem(i);
             slots[i].SetItem(item);
             slots[i].SetSelected(false);
         }
-
         selectedIndex = -1;
         detailPanel.Show(null);
     }
@@ -44,8 +46,9 @@ public class ItemMenuController : MonoBehaviour
     public void DropSelected()
     {
         if (selectedIndex < 0) return;
-
-        inventory.RemoveAt(selectedIndex);
+        var inv = inventory != null ? inventory : Inventory.Instance;
+        if (inv == null) return;
+        inv.RemoveAt(selectedIndex);
         Refresh();
     }
 }

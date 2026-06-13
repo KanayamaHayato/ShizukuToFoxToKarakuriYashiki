@@ -76,6 +76,10 @@ public class ItemDetailPanel : MonoBehaviour
                     "\n<color=#FFD700><b>éûÇÃó¨ÇÍÇÕÇ‹Çæê√Ç‹Ç¡ÇƒÇ¢Ç‹ÇπÇÒÅB</b></color>";
             }
         }
+        if (item.itemType == ItemType.Photo)
+        {
+            useButton.interactable = true;
+        }
     }
 
     public void Hide()
@@ -94,6 +98,9 @@ public class ItemDetailPanel : MonoBehaviour
     public void OnClickDrop()
     {
         if (currentItem == null) return;
+
+        // é ê^ÇÕDropÇ≈Ç´Ç»Ç¢
+        if (currentItem.itemType == ItemType.Photo) return;
 
         dropSpawner.Drop(currentItem);
         inventory.Remove(currentItem);
@@ -116,6 +123,15 @@ public class ItemDetailPanel : MonoBehaviour
             timeStopManager.StopEnemies(currentItem.timeStopSeconds);
             menuController.DropSelected();
             Hide();
+        }
+        else if (currentItem.itemType == ItemType.Photo)
+        {
+            if (EndingManager.Instance != null && EndingManager.Instance.IsInRitualRoom)
+            {
+                menuController.DropSelected();
+                Hide();
+                EndingManager.Instance.StartRitualSequenceEnd2();
+            }
         }
     }
 }

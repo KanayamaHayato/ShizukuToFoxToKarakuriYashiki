@@ -48,6 +48,7 @@ public class MazeGenerator : MonoBehaviour
 
     // フィールドに追加
     [SerializeField] private PlayerSpawner playerSpawner;
+    public static int LastSeed { get; private set; }
 
     [SerializeField] private bool useFixedSeed = false;
     [SerializeField] private int seed = 0;
@@ -59,6 +60,11 @@ public class MazeGenerator : MonoBehaviour
 
     void Start()
     {
+        if (SaveManager.Instance != null && SaveManager.Instance.loadPending)
+        {
+            useFixedSeed = true;
+            seed = SaveManager.Instance.LoadSeed();
+        }
         GenerateMaze();
     }
 
@@ -85,8 +91,11 @@ public class MazeGenerator : MonoBehaviour
             ? new System.Random(seed)
             : new System.Random();
 
-        int actualSeed = useFixedSeed ? seed : random.Next();
+        int actualSeed = useFixedSeed ? seed : new System.Random().Next();
+        random = new System.Random(actualSeed); // actualSeedで作り直す
         Debug.Log($"[MazeGenerator] Seed: {actualSeed}");
+        LastSeed = actualSeed;
+
 
         //スタート位置決め
         startPos = new Vector2Int(random.Next(width), random.Next(height));
@@ -324,9 +333,23 @@ public class MazeGenerator : MonoBehaviour
             enemySpawnManager.StartSpawning();
         }
 
+        if (SaveManager.Instance != null && SaveManager.Instance.loadPending)
+        {
+            var player = GameObject.FindWithTag("Player");
+            if (player != null)
+            {
+                var cc = player.GetComponent<CharacterController>();
+                cc.enabled = false;
+                player.transform.position = SaveManager.Instance.LoadPlayerPos();
+                cc.enabled = true;
+            }
+        }
+
         // GenerateMaze() のフロアループが全部終わった後に追加すること
         StaticBatchingUtility.Combine(root.gameObject);
         Debug.Log("[MazeGenerator] Static Batching 適用完了");
+        // その後に伝記をSpawn
+        FindObjectOfType<LoreSpawnerManager>()?.SpawnAll();
     }
 
     // ★ 部屋プレハブ選択

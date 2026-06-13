@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,6 +15,11 @@ public class LoreManager : MonoBehaviour
 
     [Header("入手通知UI")]
     [SerializeField] private LoreNotifyUI notifyUI;
+
+    [Header("エンド2用")]
+    [SerializeField] private ItemData photoItemData; // ツーショット写真のItemData
+    [SerializeField] private DialogueData photoDialogue;
+    [SerializeField] private DialogueData afterPhotoDialogue;
 
     // 収集済み伝記リスト（番号順）
     private List<LoreItem> collectedLores = new List<LoreItem>();
@@ -54,8 +60,8 @@ public class LoreManager : MonoBehaviour
         {
             Debug.Log("[LoreManager] 全伝記収集！写真を表示");
             OnAllLoresCollected?.Invoke();
-            if (loreUI != null)
-                loreUI.ShowPhoto();
+            // 会話→写真表示→インベントリ追加の順にコルーチンで
+            StartCoroutine(AllLoresSequence());
         }
     }
 
@@ -65,5 +71,35 @@ public class LoreManager : MonoBehaviour
         var sorted = new List<LoreItem>(collectedLores);
         sorted.Sort((a, b) => a.LoreNumber.CompareTo(b.LoreNumber));
         return sorted;
+    }
+
+    private IEnumerator AllLoresSequence()
+    {
+        // セリフ
+        if (photoDialogue != null)
+        {
+            DialogueManager.Instance.StartDialogue(photoDialogue);
+            yield return new WaitUntil(() => !DialogueManager.Instance.IsRunning);
+        }
+
+        // 写真表示
+        if (loreUI != null)
+            loreUI.ShowPhoto();
+
+        // 写真が閉じるまで待つ
+        yield return new WaitUntil(() => !loreUI.IsShowing);
+
+        // 写真後のセリフ
+        if (afterPhotoDialogue != null)
+        {
+            DialogueManager.Instance.StartDialogue(afterPhotoDialogue);
+            yield return new WaitUntil(() => !DialogueManager.Instance.IsRunning);
+        }
+
+        // インベントリに追加
+        // inventory.Add(photoItemData); を
+        var inventory = FindObjectOfType<Inventory>();
+        if (inventory != null && photoItemData != null)
+            inventory.ForceAdd(photoItemData);
     }
 }
