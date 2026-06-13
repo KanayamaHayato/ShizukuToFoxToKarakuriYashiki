@@ -1,10 +1,13 @@
 using UnityEngine;
+using System;
 
 public class PlayerSpawner : MonoBehaviour
 {
     [SerializeField] private GameObject playerPrefab;
 
     private GameObject currentPlayer;
+
+    public event Action OnPlayerSpawned;
 
     // PlayerSpawner.cs を修正
     public void Spawn(GameObject startRoom)
@@ -26,6 +29,8 @@ public class PlayerSpawner : MonoBehaviour
             Debug.LogWarning("[PlayerSpawner] SpawnPointが見つかりません。部屋の中心にスポーンします。");
 
         currentPlayer = Instantiate(playerPrefab, pos, Quaternion.identity);
+
+        OnPlayerSpawned?.Invoke();
     }
 
     public void DestroyExisting()
@@ -41,5 +46,10 @@ public class PlayerSpawner : MonoBehaviour
         var existing = GameObject.FindWithTag("Player");
         if (existing != null)
             DestroyImmediate(existing);
+    }
+
+    public GameObject GetCurrentPlayer()
+    {
+        return currentPlayer;
     }
 }
