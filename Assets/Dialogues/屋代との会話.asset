@@ -59,7 +59,7 @@ MonoBehaviour:
     text: "\u6642\u9593...\uFF1F"
   - speakerName: "\u5C4B\u4EE3"
     text: "\u8272\u3005\u4E8B\u60C5\u304C\u3042\u3063\u3066\u306D\u3002"
-  - speakerName: "\u5C4B\u4EE3\U0001F15F"
+  - speakerName: "\u5C4B\u4EE3"
     text: "\u3042\u3041\u3001\u305D\u3046\u3060\u3002"
   - speakerName: "\u5C4B\u4EE3\U0001F15F"
     text: "\u305D\u306E\u304A\u672D\u306F\u5927\u4E8B\u306B\u3059\u308B\u3068\u3044\u3044\u3002"

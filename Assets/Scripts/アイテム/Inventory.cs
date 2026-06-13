@@ -5,6 +5,19 @@ public class Inventory : MonoBehaviour
 {
     [SerializeField] private int maxSlots = 12;
     public List<ItemData> items = new List<ItemData>();
+    public static Inventory Instance { get; private set; }
+
+    void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        // transform.root Ç≈ÇÕÇ»Ç≠é©ï™é©êgÇæÇØéùÇøâzÇ∑
+        DontDestroyOnLoad(gameObject);
+    }
 
     public ItemData GetItem(int index)
     {
@@ -42,5 +55,10 @@ public class Inventory : MonoBehaviour
 
         items.Add(item);
         return true;
+    }
+    public void ForceAdd(ItemData item)
+    {
+        items.Add(item);
+        Debug.Log($"[Inventory] ã≠êßí«â¡: {item.itemName}");
     }
 }

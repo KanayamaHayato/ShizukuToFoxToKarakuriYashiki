@@ -50,7 +50,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemData: {fileID: 11400000, guid: cb8e90fcca4d045429f2ea38131b4121, type: 2}
-  pickupDistance: 2
+  pickupDistance: 3
 --- !u!54 &6275506412855712607
 Rigidbody:
   m_ObjectHideFlags: 0

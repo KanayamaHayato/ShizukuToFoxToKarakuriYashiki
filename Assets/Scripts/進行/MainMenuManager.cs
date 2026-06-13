@@ -9,4 +9,13 @@ public class MainMenuManager : MonoBehaviour
     {
         SceneManager.LoadScene(gameSceneName);
     }
+    public void Quit()
+    {
+        Application.Quit();
+    }
+    public void OnContinue()
+    {
+        if (SaveManager.Instance != null && SaveManager.Instance.HasSave)
+            SaveManager.Instance.Load();
+    }
 }

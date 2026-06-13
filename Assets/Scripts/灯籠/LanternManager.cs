@@ -42,4 +42,15 @@ public class LanternManager : MonoBehaviour
             OnAllLit?.Invoke();
         }
     }
+    public void DebugLightAll()
+    {
+        int remaining = TotalCount - LitCount;
+        for (int i = 0; i < remaining; i++)
+            HandleLit();
+    }
+    public void DebugLightOne()
+    {
+        if (LitCount < TotalCount)
+            HandleLit();
+    }
 }

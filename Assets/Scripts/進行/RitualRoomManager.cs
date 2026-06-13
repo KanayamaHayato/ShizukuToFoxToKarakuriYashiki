@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class RitualRoomManager : MonoBehaviour
 {
@@ -35,17 +36,14 @@ public class RitualRoomManager : MonoBehaviour
             whiteoutCanvasGroup.gameObject.SetActive(true);
         }
 
-        // Inspector‚Åİ’è‚·‚é‘ã‚í‚è‚Éƒ^ƒO‚Å’T‚·
+        // ‚Ü‚¸SpawnPoint‚ğæ“¾‚µ‚Ä‚©‚ç
         if (ritualRoomObject == null)
             ritualRoomObject = GameObject.FindWithTag("RitualRoom");
 
-        if (ritualRoomSpawnPoint == null)
-        {
-            var room = GameObject.FindWithTag("RitualRoom");
-            if (room != null)
-                ritualRoomSpawnPoint = room.transform.Find("SpawnPoint");
-        }
+        if (ritualRoomSpawnPoint == null && ritualRoomObject != null)
+            ritualRoomSpawnPoint = ritualRoomObject.transform.Find("SpawnPoint");
 
+        
         MazeGenerator mazeGenerator = FindObjectOfType<MazeGenerator>();
         if (mazeGenerator == null)
         {
@@ -62,9 +60,6 @@ public class RitualRoomManager : MonoBehaviour
             return;
         }
         Debug.Log("[RitualRoomManager] LanternManager”­Œ©");
-
-        if (ritualRoomObject != null)
-            ritualRoomObject.SetActive(false);
 
         lanternManager.OnAllLit += StartWarpSequence;
         Debug.Log("[RitualRoomManager] OnAllLit‚É“o˜^Š®—¹");
@@ -98,10 +93,6 @@ public class RitualRoomManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
 
-        // š ‹V®‚ÌŠÔ‚ªŠ®¬‚µ‚½‚çƒRƒƒ“ƒg‚ğŠO‚·
-        if (ritualRoomObject != null)
-            ritualRoomObject.SetActive(true);
-
         GameObject player = GameObject.FindWithTag("Player");
         if (player != null && ritualRoomSpawnPoint != null)
         {
@@ -120,8 +111,17 @@ public class RitualRoomManager : MonoBehaviour
             whiteoutCanvasGroup.alpha -= Time.deltaTime * whiteoutSpeed;
             yield return null;
         }
+        // ‹V®‚ÌŠÔ‚ÉˆÚ“®Œã‚ÉFog‚ğã‚ß‚é
+        RenderSettings.fogDensity = 0.01f;
+        EndingManager.Instance.IsInRitualRoom = true;
 
-        // š ‰®‘ã‚ÌƒZƒŠƒt‚àŒã‚Å
-        // DialogueManager.Instance.StartDialogue(yasiroDialogue);
+        if (LoreManager.Instance != null && LoreManager.Instance.HasAllLores)
+        {
+            SceneManager.LoadScene("End2");
+        }
+        else
+        {
+            EndingManager.Instance.StartRitualSequence();
+        }
     }
 }
