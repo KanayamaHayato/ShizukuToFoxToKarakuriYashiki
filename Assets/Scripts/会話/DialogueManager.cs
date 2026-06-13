@@ -32,6 +32,7 @@ public class DialogueManager : MonoBehaviour
 
     public void StartDialogue(DialogueData data)
     {
+        Debug.Log($"[DialogueManager] StartDialogue�Ă΂ꂽ: {data.name}", data);
         if (isRunning) return;
 
         currentData = data;

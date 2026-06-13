@@ -18,6 +18,7 @@ public class OpeningEventManager : MonoBehaviour
     // Signal_FadeOut‚©‚çŒÄ‚Ô
     public void TriggerFadeOut()
     {
+        Debug.Log("TriggerFadeOut called!"); // ©’Ç‰Á
         StartCoroutine(FadeOutAndLoad());
     }
 

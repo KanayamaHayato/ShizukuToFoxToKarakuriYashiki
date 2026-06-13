@@ -15,6 +15,9 @@ EditorBuildSettings:
     path: "Assets/Scenes/\u672C\u756A\u30B7\u30FC\u30F3/ShrineScene.unity"
     guid: 7567af0017914cb4686a5cbd9e3f2766
   - enabled: 1
+    path: "Assets/Scenes/\u672C\u756A\u30B7\u30FC\u30F3/Opening.unity"
+    guid: a2049c6e0444feb44be9a37e1c08dbfa
+  - enabled: 1
     path: "Assets/Scenes/\u672C\u756A\u30B7\u30FC\u30F3/Maze.unity"
     guid: 8451ac9697539644987e1ec8d1465cbe
   m_configObjects:

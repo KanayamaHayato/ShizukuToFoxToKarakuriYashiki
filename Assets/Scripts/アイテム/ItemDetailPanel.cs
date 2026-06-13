@@ -17,6 +17,14 @@ public class ItemDetailPanel : MonoBehaviour
 
     private ItemData currentItem;
 
+    void Start()
+    {
+        if (heartSystem == null)
+            heartSystem = FindObjectOfType<HeartSystem>();
+        if (timeStopManager == null)
+            timeStopManager = FindObjectOfType<TimeStopManager>();
+    }
+
     void Awake()
     {
         Hide();
