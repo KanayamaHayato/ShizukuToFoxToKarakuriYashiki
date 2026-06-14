@@ -1,4 +1,6 @@
+using StarterAssets;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class ShrineDialogueTrigger : MonoBehaviour
 {
@@ -7,9 +9,25 @@ public class ShrineDialogueTrigger : MonoBehaviour
     [SerializeField] private DialogueData findShrineDialogue; // ‚Kî≠å©éû
     [SerializeField] private DialogueData fixShrineDialogue;  // êGÇ¡ÇΩå„
 
+
+    private PlayerInput playerInput;
+
     void Start()
     {
+        var player = FindObjectOfType<ThirdPersonController>();
+        if (player != null)
+            playerInput = player.GetComponent<PlayerInput>();
+
+        SetPlayerInput(false);
+
+        DialogueManager.Instance.OnDialogueEnd += OnOpeningEnd;
         DialogueManager.Instance.StartDialogue(openingDialogue);
+    }
+
+    private void OnOpeningEnd()
+    {
+        DialogueManager.Instance.OnDialogueEnd -= OnOpeningEnd;
+        SetPlayerInput(true);
     }
 
     public void OnFindShrine()
@@ -20,5 +38,11 @@ public class ShrineDialogueTrigger : MonoBehaviour
     public void OnFixShrine()
     {
         DialogueManager.Instance.StartDialogue(fixShrineDialogue);
+    }
+
+    private void SetPlayerInput(bool enabled)
+    {
+        if (playerInput != null)
+            playerInput.enabled = enabled;
     }
 }

@@ -11,6 +11,7 @@ public class FadeManager : MonoBehaviour
     [SerializeField] private float fadeOutDelay = 10f; // ★ 何秒後にフェードアウトするか
     [SerializeField] private string nextSceneName = "ShrineScene"; // 次のシーン名
     [SerializeField] private Image fadePanelImage;
+    [SerializeField] private bool autoTransition = false;
 
     void Awake()
     {
@@ -24,7 +25,8 @@ public class FadeManager : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(FadeSequence());
+        if (autoTransition) // ★追加
+            StartCoroutine(FadeSequence());
     }
 
     private IEnumerator FadeSequence()

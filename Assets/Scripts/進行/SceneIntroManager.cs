@@ -42,6 +42,10 @@ public class SceneIntroManager : MonoBehaviour
         // ② チャイムが鳴り終わるまで待つ
         yield return new WaitForSeconds(chimeDuration);
 
+        // 自動歩き開始
+        if (autoWalkTarget != null)
+            autoWalkTarget.SetActive(true);
+
         // ③ フェードイン
         float elapsed = 0f;
         while (elapsed < fadeInDuration)
@@ -58,8 +62,6 @@ public class SceneIntroManager : MonoBehaviour
         if (dialogueStarter != null)
             dialogueStarter.StartDialogue();
 
-        // ⑤ 自動歩き開始
-        if (autoWalkTarget != null)
-            autoWalkTarget.SetActive(true);
+        
     }
 }

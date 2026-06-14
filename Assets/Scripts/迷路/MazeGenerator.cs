@@ -60,6 +60,15 @@ public class MazeGenerator : MonoBehaviour
 
     void Start()
     {
+        // 難易度設定を適用
+        if (DifficultyManager.Instance != null)
+        {
+            width = DifficultyManager.Instance.MazeWidth;
+            height = DifficultyManager.Instance.MazeHeight;
+            floors = DifficultyManager.Instance.MazeFloors;
+            lanternRoomCount = DifficultyManager.Instance.LanternCount;
+        }
+
         if (SaveManager.Instance != null && SaveManager.Instance.loadPending)
         {
             useFixedSeed = true;
@@ -343,6 +352,7 @@ public class MazeGenerator : MonoBehaviour
                 player.transform.position = SaveManager.Instance.LoadPlayerPos();
                 cc.enabled = true;
             }
+            SaveManager.Instance.ConsumePending();
         }
 
         // GenerateMaze() のフロアループが全部終わった後に追加すること
