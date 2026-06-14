@@ -15,6 +15,7 @@ public class SettingsManager : MonoBehaviour
 
     void Start()
     {
+        PlayerPrefs.DeleteAll();
         settingsPanel.SetActive(false);
 
         // OnValueChanged‚ðˆê’UŠO‚·
