@@ -46,10 +46,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnEntries:
   - itemPrefab: {fileID: 3056026893688772744, guid: 4ded7d318d0ba9744ab88142f5771997, type: 3}
-    weight: 5
+    weight: 10
   - itemPrefab: {fileID: 3630748521516650298, guid: 296ca47535ac91845bacd4be6fe597ac, type: 3}
-    weight: 5
-  - itemPrefab: {fileID: 3630748521516650298, guid: ab9d8125dd3000443b9da0e13698adab, type: 3}
-    weight: 2
+    weight: 10
   allowEmpty: 1
-  emptyWeight: 66.4
+  emptyWeight: 33.3

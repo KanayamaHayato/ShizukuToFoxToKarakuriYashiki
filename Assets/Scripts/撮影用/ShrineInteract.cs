@@ -126,7 +126,7 @@ public class ShrineInteract : MonoBehaviour
 
         yield return new WaitForSeconds(3f);
 
-        SceneManager.LoadScene("Maze");
+        SceneManager.LoadScene("Opening");
     }
 
     private void OnTriggerEnter(Collider other)

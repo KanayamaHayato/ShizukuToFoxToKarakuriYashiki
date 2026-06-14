@@ -27,7 +27,7 @@ public class SaveManager : MonoBehaviour
         PlayerPrefs.SetFloat("PlayerZ", player.transform.position.z);
         PlayerPrefs.SetInt("HasSave", 1);
         PlayerPrefs.Save();
-        Debug.Log("[Save] セーブ完了");
+        Debug.Log($"[Save] セーブ完了 確認HasSave:{PlayerPrefs.GetInt("HasSave", 0)}");
     }
 
     public bool HasSave => PlayerPrefs.GetInt("HasSave", 0) == 1;

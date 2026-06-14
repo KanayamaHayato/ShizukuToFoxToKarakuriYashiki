@@ -34217,6 +34217,8 @@ PlayableDirector:
     value: {fileID: 539482400}
   - key: {fileID: -7846363684427537765, guid: 375861d5b667c5a4591af49b071298e5, type: 2}
     value: {fileID: 1623690438}
+  - key: {fileID: -3060955604298520128, guid: 375861d5b667c5a4591af49b071298e5, type: 2}
+    value: {fileID: 0}
   m_ExposedReferences:
     m_References:
     - 8dc4a3c9f5f7eb44eacad0c173aee38e: {fileID: 1623690436}
@@ -95088,7 +95090,12 @@ Animator:
   m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
-  m_WarningMessage: 
+  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
+    are already bound by a Humanoid avatar. These transforms can only be changed
+    by Humanoid clips.\n\tTransform 'J_Bip_R_Ring2'\n\tTransform 'J_Bip_L_Index3'\n\tTransform
+    'J_Bip_R_Ring3'\n\tTransform 'J_Bip_R_UpperLeg'\n\tTransform 'J_Bip_C_UpperChest'\n\tTransform
+    'J_Bip_R_Middle3'\n\tTransform 'J_Bip_R_LowerArm'\n\tTransform 'J_Bip_L_Middle2'\n\tTransform
+    'J_Bip_L_ToeBase'\n\tTransform 'J_Bip_R_Index3'\n\tand more ..."
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0

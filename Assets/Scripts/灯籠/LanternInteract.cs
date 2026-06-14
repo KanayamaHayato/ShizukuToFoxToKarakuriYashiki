@@ -109,4 +109,12 @@ public class LanternInteract : MonoBehaviour
             InteractUIManager.Instance.Hide();
         }
     }
+
+    public void LightUpFromTimeline()
+    {
+        if (alreadyTouched) return;
+        alreadyTouched = true;
+        StartCoroutine(LightUpCoroutine());
+        OnLit?.Invoke();
+    }
 }
